@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-on:input="changeTitle">
+
+        <h1>{{ sayHello() }}</h1>
+
+        <!-- v-once: title值改变后，阻止rerender! -->
+        <h1 v-once>{{ title }}</h1>
+
+         <!-- title值改变后，默认会重新渲染相关区vb! -->
+        <p>{{ title }}</p>
+
+        <!-- FIXME: v-once对p不管用 -->
+        <p v-once>{{ title }}</p> 
+
+        <!-- 获取多级属性 -->
+        <p>{{ msg.foo }}</p>
+
+        <!-- 从函数中得到Text -->
+        <p>{{ sayHello() }}</p>
+        <p>{{ myTitle() }}</p>
+
+        <p>
+            <a v-bind:href='link'>Baidu</a>
+        </p>
+
+        <hr>
+        <!-- 直接输出html代码 -->
+        <p>{{ rawLink }}</p> 
+
+        <!-- 解析并渲染html代码 -->
+        <p v-html='rawLink'></p>
+        
+    </div>
+    
+    <script>
+        var app = new Vue({
+            el: '#app',         // 声明vue管理id=app的区域
+                                // 即<div id="app">
+            // vue数据区
+            data: {
+                title : 'Hello Vue123!',
+                msg : {
+                    foo: 'bar'
+                },
+                link: 'https://www.baidu.com',
+                rawLink: '<a href="https://www.baidu.com">My Baidu</a>'
+            },
+            // vue方法区
+            methods: {
+                changeTitle: function (event) {
+                    this.title = event.target.value;
+                },
+                sayHello: function() {
+                    console.log('Hello!')
+                    this.title = 'Say hello!' 
+                    // once the 'title' changed, all reference of will be rerender!
+                    return 'Hello'
+                },
+                // 返回data区域的属性
+                myTitle: function() {
+                    return this.title
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
