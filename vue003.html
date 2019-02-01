@@ -19,8 +19,7 @@
         <p>Counter: {{ counter }}</p>
         <p>Message: {{ result() }}</p>
 
-
-        <!-- better way -->
+        <!-- FIXME: seems methods are always computed! -->
         <button v-on:click='counter1++'>Increase counter 1</button>
         <p>Counter: {{ counter }}</p>
         <p>Message: {{ result() }} | {{ result1 }}</p>
@@ -42,6 +41,18 @@
                         : 'Less or equal to 5'
                 }
             },
+
+            // 用于监控vue变量。 可以观察到vue变量的变化
+            watch: {
+                counter: function(value) {
+                    console.log('value changed: ', value)
+                    var vm = this
+                    setTimeout(function() {
+                        console.log('timeout, reset counter')
+                        this.counter = 0;
+                    }, 2000)
+                }
+            },      
             methods: {
 
                 // fixme: not good!

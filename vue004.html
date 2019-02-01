@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- shorthand for v-on:click = @click -->
+        <button @click='counter++'>Increase counter</button>
+        <p>Counter: {{ counter }}</p>
+
+        <!-- shorthand for v-bind:href = :href -->
+        <a :href="url">Baidu</a>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app', 
+            data: {
+                counter: 0,
+                url: 'https://www.baidu.com'
+            },
+            watch: {
+            },      
+            methods: {
+            }
+        })
+    </script>
+</body>
+
+</html>
