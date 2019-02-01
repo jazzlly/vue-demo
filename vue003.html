@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- fixme: not good! -->
+        <button v-on:click='incCounter'>Increase counter</button>
+        <button v-on:click='decCounter'>Decrease counter</button>
+        <p>Counter: {{ counter }}</p>
+        <p>Message: {{ msg }}</p>
+
+        <!-- better way -->
+        <button v-on:click='counter++'>Increase counter</button>
+        <button v-on:click='counter--'>Decrease counter</button>
+        <p>Counter: {{ counter }}</p>
+        <p>Message: {{ result() }}</p>
+
+
+        <!-- better way -->
+        <button v-on:click='counter1++'>Increase counter 1</button>
+        <p>Counter: {{ counter }}</p>
+        <p>Message: {{ result() }} | {{ result1 }}</p>
+
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app', 
+            data: {
+                counter: 0,
+                counter1: 0,
+                msg: '',
+            },
+            computed: {
+                result1: function() {
+                    console.log('result1 invoked!')
+                    this.msg = this.counter > 5 ? 'Greater than 5' 
+                        : 'Less or equal to 5'
+                }
+            },
+            methods: {
+
+                // fixme: not good!
+                incCounter: function() {
+                    this.counter++;
+                    this.msg = this.counter > 5 ? 'Greater than 5' 
+                        : 'Less or equal to 5'
+                },
+                decCounter: function() {
+                    this.counter--;
+                    this.msg = this.counter > 5 ? 'Greater than 5' 
+                        : 'Less or equal to 5'
+                },
+
+                result() {
+                    console.log("result() was invoked!")
+                    return this.msg = this.counter > 5 ? 'Greater than 5' 
+                        : 'Less or equal to 5'
+                }
+                /* same as previous define
+                result: function() {
+                    return this.msg = this.counter > 5 ? 'Greater than 5' 
+                        : 'Less or equal to 5'
+                }*/
+            }
+        })
+    </script>
+</body>
+
+</html>

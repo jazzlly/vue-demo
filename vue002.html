@@ -6,18 +6,72 @@
 </head>
 
 <body>
-    <div id="app">        
+    <div id="app">
+        <!-- function arguments, $event is reserved for js event object -->
+        <button v-on:click='incCounter(2, $event)'>Click Me</button>
+        <p>{{ counter }}</p>
+
+        <!-- can access vue instance in v-on statement -->
+        <button v-on:click='counter++'>Click Me</button>
+        <p>{{ counter > 10 ? 'Greater than 10' : 'Less or equal to 10'}}</p>
+
+        <p v-on:mousemove='updateCoordinates'>
+            Coordinates: {{ x }} / {{ y }}
+            - <span v-on:mousemove='dummy'>DEAD SPOT</span>
+            <!-- Event modifier: 'stop', same effect like up line -->
+            - <span v-on:mousemove.stop=''>DEAD SPOT2</span>
+        </p>
+
+        <!-- modifier could apply only for keys, etc, enter, space ... -->
+        <input type="text" v-on:keyup.enter.space='alertMe'>
+
+        <hr>
+        <!-- two way binding:
+            If input changes, then name changes. 
+            Vice versa, if the name changes, then the input text changes
+        -->
+        <input type="text" v-model='name'>
+        <p>{{ name }}</p>
+
+        <!-- single way binding:
+            If input changes, name changes.
+            But if name changes, input will not change
+        -->
+        <input type="text" v-on:keyup='name = $event.target.value'>
+        <p>{{ name }}</p>
+
     </div>
-    
+
     <script>
         var app = new Vue({
-            el: '#app',         // 声明vue管理id=app的区域
-                                // 即<div id="app">
+            el: '#app', // 声明vue管理id=app的区域
+            // 即<div id="app">
             // vue数据区
             data: {
+                name: 'Ryan',
+                counter: 0,
+                x: 0.0,
+                y: 0.0
             },
             // vue方法区
             methods: {
+                // function arguments
+                incCounter: function (step, event) {
+                    this.counter += step
+                    // console.log('event:', event)
+                },
+                updateCoordinates: function (event) {
+                    this.x = event.clientX;
+                    this.y = event.clientY;
+                },
+
+                // stop propagation must be invoked!
+                dummy: function (event) {
+                    event.stopPropagation();
+                },
+                alertMe: function () {
+                    alert('Alert Me!')
+                },
             }
         })
     </script>
