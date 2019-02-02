@@ -1,0 +1,13 @@
+#myid {
+    width: 100px;
+    height: 100px;
+    background-color: gray;
+    display: inline-block;
+    margin: 10px
+}
+
+.myclass {
+    width: 10px;
+    height: 10px;
+    background-color: red
+}

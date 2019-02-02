@@ -14,11 +14,11 @@
         <!-- v-once: title值改变后，阻止rerender! -->
         <h1 v-once>{{ title }}</h1>
 
-         <!-- title值改变后，默认会重新渲染相关区vb! -->
+        <!-- title值改变后，默认会重新渲染相关区vb! -->
         <p>{{ title }}</p>
 
         <!-- FIXME: v-once对p不管用 -->
-        <p v-once>{{ title }}</p> 
+        <p v-once>{{ title }}</p>
 
         <!-- 获取多级属性 -->
         <p>{{ msg.foo }}</p>
@@ -33,44 +33,84 @@
 
         <hr>
         <!-- 直接输出html代码 -->
-        <p>{{ rawLink }}</p> 
+        <p>{{ rawLink }}</p>
 
         <!-- 解析并渲染html代码 -->
         <p v-html='rawLink'></p>
-        
+
+        <span v-if="seen">Now you see me</span>
+        <button @click='seen = !seen'>click me!</button>
+
+        <ol>
+            <li v-for="todo in todos">
+                {{ todo.text }}
+            </li>
+        </ol>
+
+
+
     </div>
-    
+
+    <div id="app-5">
+        <p>{{ message }}</p>
+        <button v-on:click="reverseMessage()">Reverse Message</button>
+    </div>
+
     <script>
         var app = new Vue({
-            el: '#app',         // 声明vue管理id=app的区域
-                                // 即<div id="app">
+            el: '#app', // 声明vue管理id=app的区域
+            // 即<div id="app">
             // vue数据区
             data: {
-                title : 'Hello Vue123!',
-                msg : {
+                title: 'Hello Vue123!',
+                seen: true,
+                msg: {
                     foo: 'bar'
                 },
                 link: 'https://www.baidu.com',
-                rawLink: '<a href="https://www.baidu.com">My Baidu</a>'
+                rawLink: '<a href="https://www.baidu.com">My Baidu</a>',
+                todos: [{
+                        text: 'Learn JavaScript'
+                    },
+                    {
+                        text: 'Learn Vue'
+                    },
+                    {
+                        text: 'Build something awesome'
+                    }
+                ]
             },
             // vue方法区
             methods: {
                 changeTitle: function (event) {
                     this.title = event.target.value;
                 },
-                sayHello: function() {
+                sayHello: function () {
                     console.log('Hello!')
-                    this.title = 'Say hello!' 
+                    this.title = 'Say hello!'
                     // once the 'title' changed, all reference of will be rerender!
                     return 'Hello'
                 },
                 // 返回data区域的属性
-                myTitle: function() {
+                myTitle: function () {
                     return this.title
+                }
+            }
+        });
+
+        var app5 = new Vue({
+            el: '#app-5',
+            data: {
+                message: 'Hello Vue.js!'
+            },
+            methods: {
+                reverseMessage: function () {
+                    this.message = this.message.split('').reverse().join('')
                 }
             }
         })
     </script>
+    
 </body>
 
 </html>
