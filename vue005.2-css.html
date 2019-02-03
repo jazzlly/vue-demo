@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vue005.css" />
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- class 不能直接绑定到css -->
+        <!-- <div class="demo" :class='red'>3.5</div>  -->
+        <!-- 需要使用object -->
+        <div class="demo" :class="{red:true}">0</div>
+
+        <!-- {red: attachRed} 表示如果attachRed为true, 就是red -->
+        <div class="demo"  
+            @click='attachRed = !attachRed' 
+            :class='{red: attachRed}'>1</div>
+
+        <!-- class可以绑定到一个vue的data -->
+        <div class="demo" :class='color'>3</div>
+
+        <!-- class可以绑定到一个vue的function -->
+        <div class="demo" :class='divClass'>2</div>
+
+        <!-- 
+            如果color是一个合法的css, 就使用color
+            否则，使用{red: attachRed}
+        -->
+         <div class="demo" :class='[color, {red: attachRed}]'>4</div>
+
+         <!-- 将input和color进行双向绑定-->
+         <input type="text" v-model='color'>
+         <input type="text" v-model='width'>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app', 
+            data: {
+                attachRed: false,
+                color: 'green',
+                width: 100
+            },
+            computed: {
+                divClass: function() {
+                    return {
+                        red: this.attachRed,
+                        blue: !this.attachRed
+                    }
+                },
+                myStyle: function() {
+                    return {
+                        backgroundColor: this.color,
+                        width: this.width + 'px'
+
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

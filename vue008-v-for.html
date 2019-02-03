@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vue005.css" />
+</head>
+
+<body>
+    <div id="app">
+        <span v-for='n in 10'> {{n}}, </span>
+
+        <ul>
+            <li v-for='ingredient in ingredients' :key='ingredient'>{{ ingredient }}</li>
+        </ul>
+
+        <button v-on:click="ingredients.push('spices')">Add ingredients</button>
+        
+        <hr>
+
+        <!-- access index -->
+        <ul>
+            <li v-for='(ingredient, i) in ingredients '>
+                {{ingredient}} ({{i}})
+            </li>
+        </ul>
+        <hr>
+
+        <ul>
+            <li v-for='person in persons'>
+                {{ person.name + "," + person.age + "," + person.color }}
+            </li>
+        </ul>
+
+        <ul>
+            <li v-for='person in persons'>
+                <div v-for='(value, key, index) in person'>
+                    {{ key}} : {{ value }}, ({{index}})
+                 </div>
+            </li>
+        </ul>
+
+        <ul>
+            <li v-for='person in persons'>
+                <span v-for='value in person'>{{ value }}</span>
+            </li>
+        </ul>
+
+        <hr>
+
+        <template v-for='(ingredient, index) in ingredients'>
+            <p>{{ ingredient}}</p>
+            <p>{{ index }}</p>
+        </template>
+
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                ingredients: ['meat', 'fruit', 'cookies'],
+                persons: [{
+                        name: 'Max',
+                        age: 25,
+                        color: 'red'
+                    },
+                    {
+                        name: 'Ryan',
+                        age: 41,
+                        color: 'blue'
+                    },
+                    {
+                        name: 'Feng',
+                        age: 38,
+                        color: 'yello'
+                    },
+                ],
+
+                show: true,
+                see: true,
+            },
+            computed: {}
+        })
+    </script>
+</body>
+
+</html>

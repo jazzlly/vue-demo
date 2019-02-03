@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<style>
+    .demo {
+        width: 70px;
+        height: 70px;
+        background-color: gray;
+        display: inline-block;
+        margin: 10px
+    }
+
+    .red {
+        background-color: red
+    }
+
+    .yellow {
+        background-color: yellow
+    }
+
+    .blue {
+        background-color: blue
+    }
+
+    .green {
+        background-color: green;
+    }
+
+    .other {
+        background-color:cadetblue
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="demo" style='background-color:green; width: 100px'></div>
+
+        <!-- !!! fixme :style中绑定的是一个json对象 -->
+        <!-- 绑定style属性, 这样写更麻烦！-->
+        <div class="demo" :style="{'background-color':'yellow'}">yellow1</div>
+        <div class="demo" :style="{backgroundColor:'yellow'}">yellow2</div>
+
+        <!-- 在style里面使用vue的数据, myStyle是一个json对象 -->
+        <div class="demo" :style='myStyle'></div>
+
+        <!-- 在style里面动态绑定vue的数据 -->
+        <div class="demo" :style="{backgroundColor:color}">color</div>
+        <div class="demo" :style='myStyle1()'></div>
+        <input type="text" v-model='color'>
+        
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                color: 'red',
+
+                myStyle: {
+                    backgroundColor: 'cadetblue',
+                    height: '25px'
+                },
+            },
+            methods: {
+                myStyle1: function() {
+                    return {
+                        backgroundColor: this.color,
+                        width: '32px'
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

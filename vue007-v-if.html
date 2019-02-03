@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vue005.css" />
+</head>
+
+<body>
+    <div id="app">
+        <p>You can see me!</p>
+        <p v-if='show'>You can see me too!</p> 
+        <p v-else-if='see'>Else if see, see me!</p>
+        <p v-else>Else, see me!</p>
+
+        <!-- <template>
+            <p>The default display for template is 'none'!</p>
+            <p>You can not see me!</p>
+        </template> -->
+
+        <template v-if='show'>
+            <h1>ABC</h1>
+            <p>Hello template!</p>
+        </template>
+
+        <!-- v-show hide the element, v-if just remove the element -->
+        <p v-show='show'>Use v-show instead of v-if</p>
+
+        <button @click='show = !show'>Switch show!</button>
+        <button @click='see = !see'>Switch see!</button>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                show: true,
+                see: true,
+            },
+            computed: {}
+        })
+    </script>
+</body>
+
+</html>
