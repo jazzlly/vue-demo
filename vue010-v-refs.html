@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vue005.css" />
+</head>
+
+<body>
+    <div id="app">
+        <!-- 可以通过ref和$refs方便地访问dom节点 -->
+        <p ref="p0">{{ msg }}</p>
+        <button @click="changeMsg()" ref="myButton">change msg</button>
+
+        <p ref="p1">p1</p>
+        <p ref="p2">p2</p>
+
+        <button @click="changeP1()">change p1</button>
+    </div>
+
+    <script>
+        var vm1 = new Vue({
+            el: '#app',
+            data: {
+                msg: "Hello VM1!"
+            },
+            methods: {
+                changeMsg : function() {
+                    vm1.msg = "Message changed!"
+                    
+                    // $refs保存了管理范围内的ref
+                    console.log(this.$refs)
+                },
+
+                changeP1: function() {
+                    console.log(this.$refs.p1)
+                    // 修改dom节点的属性
+                    this.$refs.p1.innerText = "p1 changed!"
+                }
+            }
+        })
+        // 获取dom节点的属性
+        console.log('p0: ' + vm1.$refs.p0.innerText)
+    </script>
+
+</body>
+
+</html>

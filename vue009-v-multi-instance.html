@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vue005.css" />
+</head>
+
+<body>
+    <div id="app">
+        <p>{{ msg }}</p>
+    </div>
+
+    <div id="app2">
+        <button @click="changeMsg()">change msg</button>
+    </div>
+
+    <script>
+        var vm1 = new Vue({
+            el: '#app',
+            data: {
+                msg: "Hello VM1!"
+            }
+        })
+
+        // vue instance coulde be access by other vue instance
+        var vm2 = new Vue({
+            el: "#app2",
+            methods: {
+                changeMsg : function() {
+                    vm1.msg = "Message changed!"
+                }
+            }
+        })
+        
+        // vue instance could be accessed by normal javascript code
+        setTimeout(function() {
+            console.log("timeout!")
+            vm1.msg = "Message changed by timer!"
+        }, 2000)
+    </script>
+</body>
+
+</html>

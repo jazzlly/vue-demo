@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 可以通过ref和$refs方便地访问dom节点 -->
+        <p ref="p0">{{ msg }}</p>
+    </div>
+
+    <div id="app3">
+        <!-- 内容将被vue instance中template替换 -->
+        <!-- <p>Wahaha!</p> -->
+    </div>
+
+    <script>
+        var vm1 = new Vue({
+            // el: "#app",
+            data: {
+                msg: "Hello VM1!"
+            }
+        })
+
+        // $mount是vue的内置函数，其作用是将vue instance和
+        // 被管理的html元素关联起来
+        vm1.$mount('#app')
+
+        // $mount绑定了vue instance中template和html element!
+        var vm3 = new Vue({
+            template: "<h1>Hello!</h1>"
+        })
+        
+        // vm3.$mount("#app3")
+
+        // 和vm3.$mount("#app3") 作用一样
+        vm3.$mount()
+        document.getElementById("app3").appendChild(vm3.$el)
+
+    </script>
+
+</body>
+
+</html>

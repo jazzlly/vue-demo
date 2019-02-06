@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <hello></hello>
+        <hello></hello>
+        <div class="hello"></div>
+    </div>
+
+    <hr>
+    <div id="app1">
+        <hello></hello>
+        <div class="hi"></div>
+    </div>
+
+    <script>
+        // component提供了一个可复用的，供多个vue instance使用的模板
+        // app和app1中的hello elment都使用了hello component
+        Vue.component("hello", {
+            template: "<h1>Hello!</h1>"
+        })
+
+        var app = new Vue({
+            el: "#app"
+        })
+
+        var app1 = new Vue({
+            el: "#app1"
+        })
+
+    </script>
+
+</body>
+
+</html>
