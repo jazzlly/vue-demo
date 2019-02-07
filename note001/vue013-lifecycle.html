@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <p>{{ title }}</p>
+        <input v-model="title" type="text" />
+
+        <!-- 多次调用update, update() callback仅仅只会调用一次 -->
+        <button @click="title = 'title changed!'">Change Title!</button>
+
+        <button @click="destroy()">Destroy!</button>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                title: "Vue lifecycle!"
+            },
+                
+            beforeCreate() {
+                console.log("before created!")
+            },
+            created() {
+                console.log("created!")
+            },
+            beforeMount() {
+                console.log("before mount!")
+                // 已经通过el和data更新了template
+            },
+            mounted() {
+                // vue已经将更新后的template插入到dom中
+                console.log("mounted!")
+            },
+            beforeUpdate() {
+                // 多次调用update, update() callback仅仅只会调用一次
+                console.log("before update!")
+            },
+            updated() {
+                // 多次调用update, update() callback仅仅只会调用一次
+                console.log("updated!")
+            },
+            beforeDestroy() {
+                console.log("before destroyed!")
+            },
+            destroyed() {
+                console.log("destroyed!")
+            },
+
+            methods: {
+                destroy: function() {
+                    this.$destroy()
+                    // destroy之后，在点击button或更新input, 都不会有效果了！
+                }
+            },
+        })
+
+    </script>
+
+</body>
+
+</html>
