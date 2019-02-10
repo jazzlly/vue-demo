@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<!--
+     component默认范围是global的，本文件中示范了如何使用局部的component 
+     div app和div app1中都有my-cmp element, 但是它们绑定了不同的component
+-->
+<body>
+    <div id="app">
+        <my-cmp></my-cmp>
+        <my-cmp></my-cmp>
+    </div>
+
+    <hr>
+    <div id="app1">
+        <my-cmp></my-cmp>
+    </div>
+
+    <script>
+        // Vue.component('my-cmp', {...}) 定义了global范围的component
+        
+        // 使用局部范围的component
+        var localComponent = {
+            data() {
+                return {
+                    msg: "hello!"
+                }
+            },
+            template: "<p>{{ msg }} (<button @click='changeMsg()'>change</button>)</p> ",
+            methods: {
+                changeMsg: function () {
+                    this.msg = "foo!"
+                }
+            },
+        }
+
+        // 另外一个component, elment name同样是my-cmp
+        var localComponent1 = {
+            data() {
+                return {
+                    msg: "hi!"
+                }
+            },
+            template: "<p>{{ msg }} (<button @click='changeMsg()'>change</button>)</p> ",
+
+            methods: {
+                changeMsg: function () {
+                    this.msg = "bar!"
+                }
+            },
+        }
+
+        var app = new Vue({
+            el: "#app",
+            // 定义局部范围的component, selector名称为my-cmp
+            // 注意：这里是component'S'
+            components: {
+                'my-cmp': localComponent
+            }
+        })
+
+        var app1 = new Vue({
+            el: "#app1",
+
+             // 定义局部范围的component, selector名称也是y-cmp
+             // 注意：这里是component'S'
+            components: {
+                'my-cmp': localComponent1
+            }
+        })
+    </script>
+
+</body>
+
+</html>

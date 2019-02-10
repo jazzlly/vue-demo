@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-cmp></my-cmp>
+        <hr>
+        <my-cmp></my-cmp>
+        
+    </div>
+
+    <script>
+        // component提供了一个可复用的，供多个vue instance使用的模板
+        // app和app1中的hello elment都使用了hello component
+        Vue.component("my-cmp", {
+
+            // fixme: component中的data是一个函数， 返回一个json
+            data() {
+                return {
+                    msg: "hello!"
+                }
+            },
+
+            // 每个component的数据都是独立的
+            // 两个button修改的都是自己的数据
+            template: "<p>{{ msg }} (<button @click='changeMsg()'>change</button>)</p> ",
+
+            methods: {
+                changeMsg: function() {
+                    this.msg = "Hi!"
+                }
+            },
+        })
+
+        var app = new Vue({
+            el: "#app"
+        })
+
+    </script>
+
+</body>
+
+</html>
