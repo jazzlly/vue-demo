@@ -8,10 +8,17 @@
       <div class="col-xs-12 col-sm-6">
         <!-- 将parent component中的name传递到child中 -->
         <!-- 从语法角度来看 cname是child component的一个attribute-->
-        <app-user-detail v-bind:cname="name" v-on:nameWasReset="name = $event"></app-user-detail>
+        <app-user-detail
+          v-bind:cname="name"
+          v-bind:userAge="age"
+          v-on:nameWasReset="name = $event"
+          v-on:resetFn="resetNameCb"
+        ></app-user-detail>
       </div>
       <div class="col-xs-12 col-sm-6">
-        <app-user-edit></app-user-edit>
+        <app-user-edit
+         :userAge="age"
+         v-on:ageChanged="age = $event"></app-user-edit>
       </div>
     </div>
   </div>
@@ -28,16 +35,17 @@ export default {
   },
   data() {
     return {
-      name: "Max"
+      name: "Max",
+      age: 28
     };
   },
   methods: {
     changeName() {
+      console.log("name changed: " + this.name);
       this.name = "Anna";
     },
-
-    nameChange() {
-      threadId;
+    resetNameCb() {
+      this.name = "Max";
     }
   }
 };
