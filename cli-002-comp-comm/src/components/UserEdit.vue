@@ -8,14 +8,23 @@
 </template>
 
 <script>
+
+import { eventBus }  from '../main'
+
 export default {
-    props: {
-        userAge: Number
+    data() {
+        return {
+            userAge: 28,
+        }
     },
     methods: {
         editAge() {
             this.userAge = 30;
-            this.$emit('ageChanged', this.userAge) // fixme: not working
+            // this.$emit('ageChanged', this.userAge) // fixme: not working
+
+            // 向eventBus发送事件, 直接emit事件，或是调用eventBus的函数都可以
+            // eventBus.$emit('ageChanged', this.userAge)  // option 1
+            eventBus.changeAge(this.userAge)                // option 2
         }
     },
 }

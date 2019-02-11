@@ -4,8 +4,7 @@
     <p>Many Details</p>
     <!-- 这里的name必须在props中声明 -->
     <p>User Name: {{ myNameFn }}</p>
-    <p>User Age(raw props): {{ userAge }}</p>
-    <p>User Age(computed): {{ myAge }}</p>
+    <p>User Age: {{ myAge }}</p>
 
     <button @click="resetName()">Reset Name</button>
     <button @click="resetFn()">Reset Name Callback</button>
@@ -13,6 +12,8 @@
 </template>
 
 <script>
+import { eventBus }  from '../main'
+
 export default {
   // 将parent component中的data传递到child component
   // 从语法角度来看， cname是child component的一个attribute
@@ -28,29 +29,35 @@ export default {
       required: true,
       dafault: "Ryan"
     },
+    // fixme: not working ...
+    resetFn: Function
+  },
 
-    userAge: Number,
-
-     // fixme: not working ...
-    resetFn: Function, 
-  
+  data() {
+    return {
+      myAge: 0,
+    }
   },
 
   computed: {
     myNameFn: function() {
-      console.log("myNameFn")
-      return this.cname
+      console.log("myNameFn");
+      return this.cname;
     },
-    myAge() {
-      return this.userAge
-    }
   },
 
   methods: {
     resetName() {
-      this.$emit('nameWasReset', 'Max')
+      this.$emit("nameWasReset", "Max");
     }
-  }
+  },
+
+  created() {
+    eventBus.$on('ageChanged', (age) => {
+      console.log("age changed: " + age);
+      this.myAge = age
+    })
+  },
 };
 </script>
 

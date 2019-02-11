@@ -10,15 +10,12 @@
         <!-- 从语法角度来看 cname是child component的一个attribute-->
         <app-user-detail
           v-bind:cname="name"
-          v-bind:userAge="age"
           v-on:nameWasReset="name = $event"
           v-on:resetFn="resetNameCb"
         ></app-user-detail>
       </div>
       <div class="col-xs-12 col-sm-6">
-        <app-user-edit
-         :userAge="age"
-         v-on:ageChanged="age = $event"></app-user-edit>
+        <app-user-edit></app-user-edit>
       </div>
     </div>
   </div>
