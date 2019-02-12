@@ -5,8 +5,10 @@
       <!-- 使用slot将parent componet的内容传递到child component中 -->
       <!-- 内容通过parent传入，但是style还是child comp的style -->
       <app-quote>
+        <!-- 命名slot -->
         <h2 slot="title">{{ quoteTitle }}</h2>
         <p slot="content">A wonderful quote!</p>
+        <!-- default slot -->
         <p>Content in default slot!</p>
       </app-quote>
     </div>
@@ -15,8 +17,6 @@
 
 <script>
 import Quote from "./components/Quote.vue";
-import Author from "./components/Author.vue";
-import New from "./components/New.vue";
 
 export default {
   data() {
@@ -28,8 +28,6 @@ export default {
 
   components: {
     appQuote: Quote,
-    appAuthor: Author,
-    appNew: New
   }
 };
 </script>
