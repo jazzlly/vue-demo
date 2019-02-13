@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h3>Reactive Demo</h3>
+        <p>{{ message }}</p>
+        <input type="text" v-model="message">
+
+        <hr>
+        <p>{{ msg2 }}</p>
+        <input type="text" v-model="msg2">
+    </div>
+
+    <h3>Internal</h3>
+    <div id="example">
+        <p>{{ a }}</p>
+        <input type="text" v-model="a">
+
+        <p>{{ b }}</p>
+        <input type="text" v-model="b">
+    </div>
+
+    <script>
+        // use the variable vm (short for ViewModel) to refer to our Vue instance.
+        var vm1 = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    // 当data中数据发生变化时，视图将会被重新渲染
+                    // It should be noted that properties in data are only reactive 
+                    //  if they existed when the instance was created
+                    message: "hello!"
+                }
+            },
+        })
+
+        // msg2 is not reactive, there is warnings ...
+        vm1.msg2 = "foo!"
+
+        //////////////////////////////////
+        var data = {
+            a: "wahaha",
+            b: "blabla..."
+        }
+        var vm = new Vue({
+            el: '#example',
+            data: data,
+            watch: {
+                b: function(newValue, oldValue) {
+                    console.log("new value: " + newValue + ", old value: " + oldValue);
+                }
+            },
+        })
+
+        console.log(vm.$data === data );    // => true
+        console.log(vm.$el === document.getElementById('example')); // => true
+
+        // $watch is an instance method
+        vm.$watch('a', function (newValue, oldValue) {
+            // This callback will be called when `vm.a` changes
+            console.log("new value: " + newValue + ", old value: " + oldValue);
+        })
+    </script>
+
+</body>
+
+</html>

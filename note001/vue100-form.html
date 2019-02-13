@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1>Input</h1>
+        <hr>
+        <h2>Single Line Input</h2>
+        <input v-model="message" placeholder="Edit me!">
+        <p>Message is: {{ message }}</p>
+
+        <hr>
+        <h2>Multiple Line Input</h2>
+        <div>
+            <span>Multiline message is:</span>
+            <p style="white-space: pre-line;">{{ text }}</p>
+            <br>
+            <textarea v-model="text" placeholder="Add multiple lines"></textarea>
+        </div>
+
+        <hr>
+        <h1>Checkbox</h1>
+
+        <hr>
+        <h2>Single Checkbox</h2>
+        <!-- Single checkbox
+            v-model 是true 或 false -->
+        <div>
+            <input type="checkbox" id="checkbox" v-model="checked">
+            <label for="checkbox">{{ checked }}</label>
+
+            <br>
+
+            <!-- 定制checkbox的值, 设置attribute: true-value, false-value -->
+            <input type="checkbox" id="checkbox1" v-model="toggle" true-value="foo" false-value="bar">
+            <label for="checkbox1">{{ toggle }}</label>
+        </div>
+
+        <hr>
+        <h2>Multiple Checkboxes</h2>
+        <div>
+            <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+            <label for="jack">Jack</label>
+            <input type="checkbox" id="john" value="John" v-model="checkedNames">
+            <label for="john">John</label>
+            <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+            <label for="mike">Mike</label>
+            <br>
+            <span>Checked names: {{ checkedNames }}</span>
+        </div>
+
+        <hr>
+
+        <h1>Radio</h1>
+        <!-- radio 
+            v-model会绑定input的value字段 -->
+        <div>
+            <input type="radio" id="one" value="One" v-model="picked">
+            <label for="one">One</label>
+            <br>
+            <input type="radio" id="two" value="Two" v-model="picked">
+            <label for="two">Two</label>
+            <br>
+            <!-- `picked` is a string "a" when checked -->
+            <p>使用value='a'静态绑定一个字符串</p>
+            <input type="radio" id="A" v-model="picked" value="a">
+            <label for="A">A</label>
+            <br>
+            <p>使用v-bind:value动态绑定一个vue instance数据属性</p>
+            <input id="aVar" type="radio" v-model="picked" v-bind:value="aVar">
+            <label for="aVar">aVar</label>
+            <br>
+            <span>Picked: {{ picked }}</span>
+        </div>
+
+        <hr>
+        <h1>Select</h1>
+
+        <hr>
+        <h2>Single Select</h2>
+        <!-- select 
+            v-model会绑定选中的option的value字段 -->
+        <div>
+            <select v-model="selected">
+                <option disabled value="">Please select one</option>
+                <!-- 如果option没有指定value, text和value就默认一样 -->
+                <option>A</option>
+                <!-- 和上面option等价 -->
+                <option value="A">A</option>
+
+                <option value="B">B</option>
+                <!-- 选中时， selected值将为小写b -->
+                <option value="b">B</option>
+                <option>C</option>
+            </select>
+            <span>Selected: {{ selected }}</span>
+        </div>
+        <hr>
+        <h2>Multiple Select</h2>
+        <!-- multiple select
+            v-model会绑定被选中的所有option的value字段 -->
+        <div>
+            <select v-model="multiSelected" multiple>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+            <br>
+            <span>Selected: {{ multiSelected }}</span>
+        </div>
+
+        <hr>
+        <h2>Select v-for</h2>
+        <div>
+            <select v-model="select2">
+                <option v-for="option in options" v-bind:value="option.value">
+                    {{ option.text }}
+                </option>
+            </select>
+            <span>Selected: {{ select2 }}</span>
+        </div>
+
+        <h2>Select, Option v-bind:value</h2>
+        <div>
+            <select v-model="selected3">
+                <!-- inline object literal -->
+                <option v-bind:value="{ number: 234 }">123</option>
+            </select>
+            <span>Selected: {{ selected3.number }}</span>
+        </div>
+
+        <div>
+            <h1>Modifiler</h1>
+            <hr>
+            <h2>Lazy modifier</h2>
+            <!-- By default, v-model syncs the input with the data after each input event 
+                (with the exception of IME composition as stated above). 
+                You can add the lazy modifier to instead sync after change events: -->
+            <div>
+                <input v-model.lazy="lazyMessage" placeholder="Edit me!">
+                <p>Lazy message is: {{ lazyMessage }}</p>
+            </div>
+
+            <hr>
+            <h2>Number modifier</h2>
+            <div>
+                <input v-model.number="numData" type="number" placeholder="Enter numbers!" />
+                <p>Number is: {{ numData }}</p>
+            </div>
+
+            <hr>
+            <h2>trim modifier</h2>
+            <div>
+                <input v-model.trim="trimMsg" placeholder="trim msg!" />
+                <p>trimmed msg is: {{ trimMsg }}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+
+            data() {
+                return {
+                    message: "",
+                    lazyMessage: "",
+                    numData: 0,
+                    trimMsg: "",
+                    text: "",
+                    aVar: "I'm a foo!",
+                    checked: false, // 和checkbox绑定的v-model可以是boolean类型
+                    toggle: "foo",
+                    checkedNames: [], // 和checkbox绑定的v-model可以是boolean类型
+                    picked: 'One',
+                    selected: '',
+                    multiSelected: [],
+
+                    select2: "C",
+                    options: [{
+                            text: 'One',
+                            value: 'A'
+                        },
+                        {
+                            text: 'Two',
+                            value: 'B'
+                        },
+                        {
+                            text: 'Three',
+                            value: 'C'
+                        },
+                    ],
+                    selected3: '',
+                }
+            },
+        })
+    </script>
+
+</body>
+
+</html>

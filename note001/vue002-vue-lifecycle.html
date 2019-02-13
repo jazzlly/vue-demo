@@ -6,6 +6,16 @@
 </head>
 
 <body>
+    <div>
+        <h3>Instance Lifecycle Hooks</h3>
+        <ul>
+            <li>it needs to set up data observation</li>
+            <li>compile the template</li>
+            <li>mount the instance to the DOM</li>
+            <li>and update the DOM when data changes</li>
+        </ul>
+        <img src="images/lifecycle.png" style="max-width: 75%;">
+    </div>
     <div id="app">
         <p>{{ title }}</p>
         <input v-model="title" type="text" />
@@ -22,12 +32,16 @@
             data: {
                 title: "Vue lifecycle!"
             },
-                
+
             beforeCreate() {
-                console.log("before created!")
+                console.log("before created: " + this.title) // undefined
             },
+
+            // the created hook can be used to run code after an instance is created:
             created() {
-                console.log("created!")
+                console.log("created: " + this.title)
+                // Don’t use arrow functions on an options property or callback, 
+                // such as created: () => console.log(this.a) or vm.$watch('a', newValue => this.myMethod())
             },
             beforeMount() {
                 console.log("before mount!")
@@ -53,13 +67,12 @@
             },
 
             methods: {
-                destroy: function() {
+                destroy: function () {
                     this.$destroy()
                     // destroy之后，在点击button或更新input, 都不会有效果了！
                 }
             },
         })
-
     </script>
 
 </body>

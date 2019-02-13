@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <ol>
+            <todo-item 
+                v-for="(item, index) in todos" :key="index"
+                v-bind:todo="item"> </todo-item>
+        </ol>
+
+    </div>
+
+    <script>
+        Vue.component('todo-item', {
+            // The todo-item component now accepts a
+            // "prop", which is like a custom attribute.
+            // This prop is called todo.
+            props: ['todo'],
+            template: '<li>{{ todo.text }}</li>'
+        })
+
+        var app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    todos: [
+                        {text: "Buy iphone XS max"},
+                        {text: "Buy macbook air 2018"},
+                        {text: "Buy more ..."},
+                    ]
+                }
+            },
+        })
+    </script>
+
+</body>
+
+</html>
