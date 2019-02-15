@@ -88,14 +88,15 @@ export default {
       };
       console.log(formData);
 
-      let axiosConfig = {
-        headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-          "Access-Control-Allow-Origin": "*"
-        }
-      };
+      // let axiosConfig = {
+      //   headers: {
+      //     "Content-Type": "application/json;charset=UTF-8",
+      //     "Access-Control-Allow-Origin": "*"
+      //   }
+      // };
+
       axios
-        .post("http://localhost:8888/user", formData, axiosConfig)
+        .post("http://localhost:8888/user", formData)
         .then(params => {
           console.log(params);
         })
