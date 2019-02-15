@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <h3>Foo!</h3>
+                <button type="button" class="btn btn-primary" v-custom-on:click="foo">Click Me!</button>
+                <hr>
+                <div 
+                    style="width: 100px; height: 100px; background-color: lightcoral"
+                    v-custom-on:mouseenter="bar" v-custom-on:mouseleave ="wah">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: "#app",
+            // 自定义一个本地的v-highlight的directive
+            directives: {
+                customOn: {
+                    bind(el, binding, vnode) {
+                        console.log("binding ...");
+                        
+                        // el.onclick = function() {
+                        //     binding.value();    // 函数reference调用!
+                        // }
+
+                        const type = binding.arg    // click
+                        const fn = binding.value    // func
+                        el.addEventListener(type, fn);
+                    }
+                }
+            },
+            methods: {
+                foo() {
+                    console.log("foo invoked!");
+                },
+                bar() {
+                    console.log("bar invoked!");
+                },
+                wah() {
+                    console.log("wah invoked!");
+                }
+            },
+        })
+    </script>
+
+</body>
+
+</html>

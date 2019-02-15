@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="comm/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <h3>directives</h3>
+            <p v-text="'Some Test'"></p>
+            <p v-html="'<strong>Text</strong>'"></p>
+        </div>
+
+        <div>
+            <h3>custom directives</h3>
+            <!-- 在#app本地范围内起作用 -->
+            <p v-highlight:background.delayed="'lightgreen'">highlight test</p>
+            <p v-highlight:background.blink="{color1 : 'lightblue', interval: 2000}">highlight test</p>
+        </div>
+
+    </div>
+
+    <!-- 全局范围内不起作用 -->
+    <p v-highlight>highlight test</p>
+    <p v-highlight="'red'">highlight test</p>
+    <p v-highlight:background="'yellow'">highlight test</p>
+    <p v-highlight:background.delayed="'green'">highlight test</p>
+
+    <script>
+        new Vue({
+            el: "#app",
+            // 自定义一个本地的v-highlight的directive
+            directives: {
+                highlight: {
+                    bind(el, binding, vnode) {
+                        console.log("binding ...");
+                        // el.style.backgroundColor = 'green'
+                        // el.style.backgroundColor = binding.value;
+
+                        var delay = 0;
+                        if (binding.modifiers['delayed']) {
+                            delay = 2000
+                        }
+
+                        setTimeout(() => {
+                            // <p v-highlight:background="'yellow'">highlight test</p>
+                            // binding.arg为background, binding.value为'yellow'
+                            if (binding.arg === 'background') {
+                                el.style.backgroundColor = binding.value;
+                            } else {
+                                el.style.color = binding.value;
+                            }
+                        }, delay);
+
+
+                        if (delay ===0 && binding.modifiers['blink']) {
+                            console.log("color1:" + binding.value.color1);
+                            console.log("interval:" + binding.value.interval);
+
+                            let color1 = binding.value.color1 ? binding.value.color1 : 'lightcoral'
+                            let color2 = 'lightgreen'
+                            let interval = binding.value.interval ? binding.value.interval : 700
+                            el.style.backgroundColor = color1
+                            setInterval(() => {
+                                console.log("color: " + el.style.backgroundColor);
+                                if (el.style.backgroundColor === color1) {
+                                    el.style.backgroundColor = color2
+                                } else {
+                                    el.style.backgroundColor = color1
+
+                                }
+                            }, interval);
+                        }
+                    }
+
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
