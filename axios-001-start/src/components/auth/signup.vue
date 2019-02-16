@@ -86,7 +86,8 @@ export default {
         hobbies: this.hobbyInputs.map(hobby => hobby.value),
         terms: this.terms
       };
-      console.log(formData);
+     
+      // console.log(formData);
 
       // let axiosConfig = {
       //   headers: {
@@ -96,7 +97,7 @@ export default {
       // };
 
       axios
-        .post("http://localhost:8888/user", formData)
+        .post("http://localhost:8081/account", formData)
         .then(params => {
           console.log(params);
         })

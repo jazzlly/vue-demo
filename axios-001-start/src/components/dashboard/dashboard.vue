@@ -5,6 +5,16 @@
   </div>
 </template>
 
+<script>
+import axios from 'axios';
+
+export default {
+  created() {
+    axios.get("http://localhost:8888/user")
+  },
+}
+</script>
+
 <style scoped>
   h1, p {
     text-align: center;

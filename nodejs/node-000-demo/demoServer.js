@@ -1,5 +1,6 @@
 var express = require('express');
 var cors = require('cors');
+const { check, validationResult } = require('express-validator/check');
 
 var app = express();
 app.use(express.json());
@@ -10,37 +11,37 @@ app.use(cors({
   maxAge: 86400
 }));
 
-/*
-// Add headers
-app.use(function (req, res, next) {
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Headers', '*');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // 在有效时间内，浏览器无须为同一请求再次发起预检请求
-    res.setHeader('Access-Control-Max-Age', 86400);
-
-    // Pass to next layer of middleware
-    next();
-});
-*/
 
 app.get('/', function (req, res) {
    res.send('Hello World');
 })
+
+// get user by email
+app.get('/user', [
+  check('email').isEmail(),
+], function (req, res) {
+  console.log('get user query: ' + req.query.email);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  res.send(userMap.get(req.query.email));
+})
+
+// get all users
+app.get('/users', function (req, res) {
+  res.send(Array.from(userMap.values));
+})
+
+const userMap = new Map();
  
 app.post('/user', function (req, res) {
     console.log(req.body); // your JSON
+    userMap.set(req.body.email, req.body)
+
     res.send({result: 0});
 })
 
