@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import axiosInstance from '../../axios-auth.js';
 
 export default {
   data() {
@@ -96,8 +97,8 @@ export default {
       //   }
       // };
 
-      axios
-        .post("http://localhost:8081/account", formData)
+      axiosInstance
+        .post("/account", formData)
         .then(params => {
           console.log(params);
         })

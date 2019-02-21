@@ -5,7 +5,7 @@
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
 </head>
 
@@ -23,8 +23,11 @@
                 <router-link to='/bar'>bar</router-link>
                 <br>
                 <!-- 通过名称来link -->
-                <router-link :to="{name: 'bar'}">xxx</router-link>
+                <router-link :to="{name: 'wah'}">wah</router-link>
             </p>
+
+            <!-- 路由出口 -->
+            <h3>路由匹配到的vue组件将渲染在这里</h3>
             <router-view></router-view>
         </div>
     </div>
@@ -43,6 +46,10 @@
             template: '<div>bar</div>'
         }
 
+        const Wah = {
+            template: '<div>wah</div>'
+        }
+
         // 2. 定义路由
         // 每个路由应该映射一个组件。 其中"component" 可以是
         // 通过 Vue.extend() 创建的组件构造器，
@@ -57,7 +64,13 @@
                 path: '/bar',
                 component: Bar,
                 name: 'bar'
+            },
+            {
+                path: '/wah',
+                component: Wah,
+                name: 'wah'
             }
+
         ]
 
         // 3. 创建 router 实例，然后传 `routes` 配置
@@ -69,6 +82,21 @@
         new Vue({
             el: "#app",
             router: router,
+
+            computed: {
+                username() {
+                    // 我们很快就会看到 `params` 是什么
+                    return this.$route.params.username
+                }
+            },
+            
+            methods: {
+                goBack() {
+                    window.history.length > 1 ?
+                        this.$router.go(-1) :
+                        this.$router.push('/')
+                }
+            }
         })
     </script>
 

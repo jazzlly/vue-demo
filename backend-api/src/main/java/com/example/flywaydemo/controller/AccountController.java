@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/account")
-@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class AccountController {
 
     @Autowired
@@ -19,6 +19,10 @@ public class AccountController {
 
     @PostMapping("")
     public ResponseEntity addAccount(@RequestBody @Validated Account account) {
+        if (accountRepository.findByEmail(account.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Account already created!");
+        }
+
         accountRepository.save(account);
         return ResponseEntity.ok("");
     }

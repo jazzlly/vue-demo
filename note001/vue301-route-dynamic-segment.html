@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="container">
+            <h1>Hello v-route!</h1>
+            <p>
+                <router-link to="/user/foo">user foo</router-link>
+                <br>
+                <router-link to="/user/bar">user bar</router-link>
+                <br>
+                <router-link to="/user/user_id_foo/post/post_id_foo">user foo, post foo</router-link>
+                <br>
+                <router-link to="/user/user_id_bar/post/post_id_bar">user bar, post bar</router-link>
+                <!-- <router-link 
+                    :to="{name: 'user', $route.params: {id: 'user foo xxx'}">
+                    user foo with name
+                </router-link> -->
+                <!-- <router-link :to="{name : 'user'}">to name</router-link> -->
+                <!-- <router-link 
+                    :to="{name:'user1', id:'user id wah', post_id:'post id wah'}">
+                    user wah
+                </router-link> -->
+            </p>
+
+            <!-- 路由出口 -->
+            <h3>路由匹配到的vue组件将渲染在这里</h3>
+            <router-view></router-view>
+        </div>
+    </div>
+
+
+    <script>
+        var gFrom = null
+        var gTo = null
+
+        const User = {
+            template: '<div>User {{ $route.params.id }}</div>',
+            beforeRouteUpdate(to, from, next) {
+                // react to route changes...
+                // don't forget to call next()
+                console.log("beforeRouteUpdate, from: " + from);
+                console.log("beforeRouteUpdate to: " + to);
+                next()
+            }
+
+        }
+
+        const User1 = {
+            template: '<div>User {{ $route.params.id + "," + $route.params.post_id }}</div>'
+        }
+
+        const router = new VueRouter({
+            routes: [
+                // 动态路径参数 以冒号开头
+                {
+                    path: '/user/:id',
+                    component: User,
+                    name: 'user'
+                },
+                {
+                    path: '/user/:id/post/:post_id',
+                    component: User1,
+                    name: 'user1'
+                },
+            ]
+        })
+
+        var vm = new Vue({
+            el: "#app",
+            router: router,
+            watch: {
+                '$route'(to, from) {
+                    // 对路由变化作出响应...
+                    console.log("to: " + to);
+                    console.log("from: " + from);
+                    gFrom = from
+                    gTo = to
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
