@@ -34,6 +34,7 @@ app.get('/index_exist', async function (req, res) {
 })
 // todo: wrap exception!
 // https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016
+// https://itnext.io/using-async-routes-with-express-bcde8ead1de8
 
 // get query params
 app.get('/es_index_backup', async function (req, res) {
