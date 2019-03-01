@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+    <script src="../../note001/comm/vue.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="app">
+        <!-- 同步执行await -->
+        <button type="button" class="btn btn-primary" @click="awaitSeq()">awaitSeq</button>
+        <br>
+
+        <!-- 并发执行await -->
+        <button type="button" class="btn btn-primary" @click="awaitConcur()">awaitConcur</button>
+        <br>
+
+        <button type="button" class="btn btn-primary" @click="stillSerial()">stillSerial</button>
+        <br>
+
+        <button type="button" class="btn btn-primary" @click="parallel()">parallel</button>
+        <br>
+
+    </div>
+
+    <script>
+        new Vue({
+            el: '.app',
+            methods: {
+                awaitSeq: awaitSeq,
+                awaitConcur: awaitConcur,
+                stillSerial: stillSerial,
+                parallel: parallel,
+            },
+        })
+
+        var resolveAfter2Seconds = function () {
+            console.log("starting slow promise");
+            return new Promise(resolve => {
+                setTimeout(function () {
+                    resolve(20);
+                    console.log("slow promise is done");
+                }, 2000);
+            });
+        };
+
+        var resolveAfter1Second = function () {
+            console.log("starting fast promise");
+            return new Promise(resolve => {
+                setTimeout(function () {
+                    resolve(10);
+                    console.log("fast promise is done");
+                }, 1000);
+            });
+        };
+
+        // 顺序执行！
+        // 函数内部是顺序执行的，但是函数的调用者不会等待await!
+        function awaitSeq() {
+            var sequentialStart = async function () {
+                console.log('==SEQUENTIAL START==');
+
+                // 如果 await 操作符后的表达式不是一个 Promise 对象, 则它会被转换成一个 resolved 状态的 Promise 对象
+                // await会等待
+                const slow = await resolveAfter2Seconds();
+                console.log(slow);
+
+                // await会等待
+                const fast = await resolveAfter1Second();
+                console.log(fast);
+                console.log('==SEQUENTIAL END==');
+            }
+
+            console.log("before sequentialStart...");
+            // 调用者不会等待函数里面的await!
+            sequentialStart()
+            console.log("after sequentialStart!");
+        }
+
+        function awaitConcur() {
+            var conCurStart = async function () {
+                console.log('==CONCUR START==');
+
+                // 如果 await 操作符后的表达式不是一个 Promise 对象, 则它会被转换成一个 resolved 状态的 Promise 对象
+
+                // 并发向前， new promise中的逻辑并发
+                const slow = resolveAfter2Seconds();
+                // 并发向前，new promise中逻辑并发
+                const fast = resolveAfter1Second();
+
+                // await等待slow
+                console.log(await slow);
+                // await等待fase, 已经完成!
+                console.log(await fast);
+                console.log('==CONCUR END==');
+            }
+            conCurStart()
+        }
+
+        function stillSerial() {
+            console.log('==CONCURRENT START with Promise.all==');
+            Promise.all([resolveAfter2Seconds(), resolveAfter1Second()]).then(([slow, fast]) => {
+                console.log(slow);
+                console.log(fast);
+            });
+        }
+
+        function parallel() {
+            console.log('==PARALLEL with Promise.then==');
+
+            // 这种情况下可以简写成 resolveAfter2Seconds().then(console.log);
+            resolveAfter2Seconds().then((message) => console.log(message));
+            resolveAfter1Second().then((message) => console.log(message));
+        }
+
+    </script>
+
+    <style>
+        button {
+            margin: 10px;
+        }
+    </style>
+</body>
+
+</html>

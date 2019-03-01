@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Async Javascript Intro!</title>
+</head>
+<body>
+    <h1>Async Javascript Intro!</h1>
+    <script>
+        const second = () => {
+            setTimeout(() => {
+                console.log("second");
+            }, 2000);
+        }
+        const first = () => {
+            console.log('first!');
+            second()
+            console.log("end");
+        }
+
+        first()
+    </script>
+</body>
+</html>

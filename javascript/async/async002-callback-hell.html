@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Async Javascript Intro!</title>
+</head>
+
+<body>
+    <h1>Async Javascript Callback Hell!</h1>
+    <h2>对于ajax函数callback再次调用ajax请求，就会导致callback hell!</h2>
+    <h2>使用ES6使用promise替换callback, 避免callback hell的问题!</h2>
+
+    <script>
+        function getRecipe() {
+            setTimeout(() => {
+                const recipeIds = [111, 222, 333, 444]
+                console.log("callback level 1!");
+
+                setTimeout((id) => {
+                    const recipe = {
+                        title: 'foo',
+                        name: 'bar'
+                    }
+                    console.log(`${id}: ${recipe.title}, ${recipe.name}`);
+                    console.log('callback level 2!');
+
+                    setTimeout(() => {
+                        console.log("callback level 3!");
+
+                        setTimeout(() => {
+                            console.log("callback level 4...");
+                        }, 1000);
+                    }, 1000);
+                }, 1000, recipeIds[2]);
+            }, 500);
+
+        }
+
+        getRecipe()
+    </script>
+</body>
+
+</html>
