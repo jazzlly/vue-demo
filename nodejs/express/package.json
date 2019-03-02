@@ -9,5 +9,12 @@
     "mysql": "^2.16.0",
     "underscore": "^1.9.1",
     "util": "^0.11.1"
+  },
+  "devDependencies": {
+    "mocha": "^6.0.2",
+    "supertest": "^3.4.2"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }

@@ -7,14 +7,10 @@ var express = require('express');
 var util = require('util')
 var app = express();
 var mysql = require('mysql');
-var elasticsearch = require('elasticsearch')
 
-const esHost = '192.168.11.90:9200'
 const serverPort = 8888
-const esClient = new elasticsearch.Client({
-    host: esHost,
-    log: 'trace'
-});
+
+const {es, esClient} = require('./Es')
 
 var connection = mysql.createConnection({
   host     : '192.168.11.42',
@@ -52,9 +48,6 @@ const userAccountMap = new Map()
 connection.query('select account, org_code from mdm_user', 
         function (error, results) {
     if (error) throw error;
-
-    // console.log(util.inspect(fields));
-    // console.log(util.inspect(results[0]));
 
     results.forEach(row => {
       userAccountMap.set(row.account, row.org_code)
@@ -96,7 +89,7 @@ app.get('/index_exist', async function (req, res) {
     const esIndex = req.query.index
     console.log('es index: ' + esIndex);
 
-    const exist = await isEsIndexExist(esIndex)
+    const exist = await es.isEsIndexExist(esIndex)
     res.send(exist)
 })
 
@@ -107,12 +100,12 @@ app.get('/index_exist', async function (req, res) {
 app.get('/index_count', async function (req, res) {
     const index = req.query.index
     console.log('es index: ' + index);
-    if (!await isEsIndexExist(index)) {
+    if (!await es.isEsIndexExist(index)) {
         res.status(404).send("Es index not found!")
         return
     }
 
-    const count = await indexCount(index)
+    const count = await es.indexCount(index)
     res.send(new String(count))
 })
 
@@ -124,13 +117,13 @@ app.get('/create_index', async function (req, res) {
     const esIndex = req.query.index
     console.log('es index: ' + esIndex);
 
-    if (await isEsIndexExist(esIndex)) {
+    if (await es.isEsIndexExist(esIndex)) {
         console.log('es index: ' + esIndex + " already created!");
         res.status(400).send("Es index already created!")
         return
     }
 
-    await createEsIndex(esIndex)
+    await es.createEsIndex(esIndex)
     res.send("Index: " + esIndex + " created!")
 })
 
@@ -141,12 +134,12 @@ app.get('/create_index', async function (req, res) {
 app.get('/delete_index', async function (req, res) {
     const esIndex = req.query.index
     console.log('es index: ' + esIndex);
-    if (!await isEsIndexExist(esIndex)) {
+    if (!await es.isEsIndexExist(esIndex)) {
         res.status(404).send("Es index not found!")
         return
     }
 
-    await deleteEsIndex(esIndex)
+    await es.deleteEsIndex(esIndex)
     res.send("Index: " + esIndex + " delete!!")
 })
 
@@ -158,15 +151,15 @@ app.get('/backup_index', async function (req, res) {
     const esIndex = req.query.index
     console.log('es index: ' + esIndex);
 
-    if (!await isEsIndexExist(esIndex)) {
+    if (!await es.isEsIndexExist(esIndex)) {
         res.status(404).send("Es index not found!")
         return
     }
 
     const backupIndex = esIndex + '-bak'
-    if (await isEsIndexExist(backupIndex)) {
+    if (await es.isEsIndexExist(backupIndex)) {
         console.log("delete backup index: " + backupIndex)
-        await deleteEsIndex(backupIndex);
+        await es.deleteEsIndex(backupIndex);
     }
 
     console.log("es index exist, continue...");
@@ -187,17 +180,17 @@ app.get('/is_indices_equal', async function (req, res) {
     const index1 = req.query.index1
     const index2 = req.query.index2
 
-    if (!await isEsIndexExist(index1)) {
+    if (!await es.isEsIndexExist(index1)) {
         res.status(404).send(`index ${inde1} not found!`)
         return
     }
-    if (!await isEsIndexExist(index2)) {
+    if (!await es.isEsIndexExist(index2)) {
         res.status(404).send(`index ${index2} not found!`)
         return
     }
 
-    const count1 = await indexCount(index1)
-    const count2 = await indexCount(index2)
+    const count1 = await es.indexCount(index1)
+    const count2 = await es.indexCount(index2)
     if (count1 !== count2) {
         res.send(`Count not eqaul, index1 count: ${count1}, index2 count: ${count2}`)
         return
@@ -248,46 +241,6 @@ var server = app.listen(serverPort, function () {
     console.log("应用实例，访问地址为 http://%s:%s", host, port)
 })
 
-async function isEsIndexExist(index) {
-    return await esClient.indices.exists({
-        index: index
-    })
-}
-
-async function indexCount(index) {
-    /* schema for count
-    {
-        "count": 10000,
-        "_shards": {
-            "total": 5,
-            "successful": 5,
-            "failed": 0
-        }
-    }*/
-    const resp = await esClient.count({
-        index: index
-    });
-    return resp.count
-}
-
-async function createEsIndex(index) {
-    console.log("create index: " + index + ", begin ...");
-
-    await esClient.indices.create({
-        index: index
-    })
-    console.log("create index: " + index + ", done!");
-}
-
-async function deleteEsIndex(index) {
-    console.log("delete index: " + index + ", begin ...");
-
-    await esClient.indices.delete({
-        index: index,
-    })
-
-    console.log("delete index: " + index + ", done!");
-}
 
 async function scrollIndex(esIndex, scrollCallback) {
 
