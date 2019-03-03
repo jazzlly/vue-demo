@@ -13,7 +13,8 @@ const {
     es,
     esClient
 } = require('./Es')
-var mdmService = require('./mdmService')
+
+var mdmService = require('./MdmService')
 
 app.get('/org/def_code_by_id', async function (req, res) {
     const orgId = req.query.org_id

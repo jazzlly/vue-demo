@@ -19,15 +19,6 @@ Es.prototype.isEsIndexExist = async function(index) {
 }
 
 Es.prototype.indexCount = async function(index) {
-    /* schema for count
-    {
-        "count": 10000,
-        "_shards": {
-            "total": 5,
-            "successful": 5,
-            "failed": 0
-        }
-    }*/
     const resp = await esClient.count({
         index: index
     });

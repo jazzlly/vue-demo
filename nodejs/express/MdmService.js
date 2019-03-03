@@ -50,19 +50,19 @@ connection.query('select account, org_code from mdm_user',
     console.log("Read mysql user data done!");
 });
 
-var mdmService = function() {}
+var MdmService = function() {}
 
-mdmService.prototype.defCodeByOrgId = (orgId) => {
+MdmService.prototype.defCodeByOrgId = (orgId) => {
     return orgIdMap.get(orgId)
 }
 
-mdmService.prototype.defCodeByOrgCode = (orgCode) => {
+MdmService.prototype.defCodeByOrgCode = (orgCode) => {
     return orgCodeMap.get(orgCode)
 }
 
-mdmService.prototype.defCodeByAccount = (account) => {
+MdmService.prototype.defCodeByAccount = (account) => {
     const orgId = userAccountMap.get(account)
     return orgIdMap.get(orgId)
 }
 
-module.exports = new mdmService()
+module.exports = new MdmService()
