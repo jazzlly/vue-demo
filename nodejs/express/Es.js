@@ -1,12 +1,13 @@
 "use strict";
 
+
 // TODO: 处理异常
+var esHost = require('./Config').esAddrPort
 var elasticsearch = require('elasticsearch')
 
-const esHost = '192.168.11.42:9200'
 const esClient = new elasticsearch.Client({
     host: esHost,
-    log: 'trace'
+    log: 'info'
 });
 
 var Es = function() {}

@@ -6,79 +6,34 @@ var _ = require('underscore')
 var express = require('express');
 var util = require('util')
 var app = express();
-var mysql = require('mysql');
 
 const serverPort = 8888
 
-const {es, esClient} = require('./Es')
-
-var connection = mysql.createConnection({
-  host     : '192.168.11.42',
-  user     : 'root',
-  password : 'pekall1234',
-  database : 'mdm_reactor'
-});
-
-connection.connect();
-
-/* key: orgId, value: defCodeReal */
-const orgIdMap = new Map()
-
-/* key: orgCode, value: defCodeReal */
-const orgCodeMap = new Map()
-
-connection.query('select id, org_code_real, def_code_real from mdm_org', 
-        function (error, results) {
-    if (error) throw error;
-
-    // console.log(util.inspect(fields));
-    // console.log(util.inspect(results[0]));
-
-    results.forEach(row => {
-      orgIdMap.set(row.id, row.def_code_real)
-      orgCodeMap.set(row.org_code_real, row.def_code_real)
-    })
-    console.log("Read mysql org data done!");
-});
-
-/* key: account, value: org id of user */
-const userAccountMap = new Map()
-
-// 查询用户数据：
-connection.query('select account, org_code from mdm_user', 
-        function (error, results) {
-    if (error) throw error;
-
-    results.forEach(row => {
-      userAccountMap.set(row.account, row.org_code)
-    })
-    console.log("Read mysql user data done!");
-});
+const {
+    es,
+    esClient
+} = require('./Es')
+var mdmService = require('./mdmService')
 
 app.get('/org/def_code_by_id', async function (req, res) {
     const orgId = req.query.org_id
     console.log(`org id: ${orgId}`);
-    
-    res.send(orgIdMap.get(orgId))
+
+    res.send(mdmService.defCodeByOrgId(orgId))
 })
 
 app.get('/org/def_code_by_code', async function (req, res) {
     const orgCode = req.query.org_code
     console.log(`org code: ${orgCode}`);
 
-    res.send(orgCodeMap.get(orgCode))
+    res.send(mdmService.defCodeByOrgCode(orgCode))
 })
 
 app.get('/user/def_code_by_account', async function (req, res) {
     const account = req.query.account
     console.log(`user account: ${account}`);
-    
-    const orgId = userAccountMap.get(account)
-    if(orgId) {
-        res.send(orgIdMap.get(orgId))
-        return
-    }
-    res.status(404).send("def code not found!")
+
+    res.send(mdmService.defCodeByAccount(account))
 })
 
 /** 
@@ -172,6 +127,50 @@ app.get('/backup_index', async function (req, res) {
     res.send("Back done!")
 })
 
+app.get('/add_def_code_for_index', async function (req, res) {
+    const esIndex = req.query.index
+    console.log('es index: ' + esIndex);
+
+    if (!await es.isEsIndexExist(esIndex)) {
+        res.status(404).send("Es index not found!")
+        return
+    }
+
+    await scrollIndexAddDefOrgCode(esIndex)
+
+    res.send("Back done!")
+})
+
+app.get('/check_def_code_for_index', async function (req, res) {
+    const esIndex = req.query.index
+    console.log('es index: ' + esIndex);
+
+    if (!await es.isEsIndexExist(esIndex)) {
+        res.status(404).send("Es index not found!")
+        return
+    }
+
+    var list = []
+    await scrollIndex2(esIndex, (hit) => {
+        const defCodeReal = getDefCodeReal(hit)
+        if (hit._source.defCodeReal && hit._source.defCodeReal === defCodeReal) {
+        } else {
+            // console.log(`push hit: ${hit._source}`);
+            list.push(hit)
+        }
+    })
+
+    if (list.length > 0) {
+        list.forEach((li) => {
+            console.log(li);
+        })
+        res.status(500).send("Not valid!")
+        return
+    }
+    
+    res.send("Valid!")
+})
+
 /**
  * 检查两个index内容是否相同
  * query: index1, index2
@@ -207,7 +206,7 @@ app.get('/is_indices_equal', async function (req, res) {
         map2.set(hit._id, hit._source)
     })
 
-    if(!compareMaps(map1, map2)) {
+    if (!compareMaps(map1, map2)) {
         res.send("Not equal!")
         return
     }
@@ -226,7 +225,7 @@ function compareMaps(map1, map2) {
         testVal = map2.get(key);
         // in cases of an undefined value, make sure the key
         // actually exists on the object so there are no false positives
-        if (!_.isEqual(testVal, val)|| (testVal === undefined && !map2.has(key))) {
+        if (!_.isEqual(testVal, val) || (testVal === undefined && !map2.has(key))) {
             console.log(`map1: ${key},  ${util.inspect(val)}`);
             console.log(`map2: ${key}, ${util.inspect(testVal)}`);
             return false;
@@ -309,6 +308,79 @@ async function scrollIndex(esIndex, scrollCallback) {
     } while (response.hits.hits.length);
 }
 
+async function scrollIndexAddDefOrgCode(esIndex) {
+
+    var response = await esClient.search({
+        index: esIndex,
+        scroll: '30s'
+    })
+
+    /* resp的schema:
+    resp: { 
+        _scroll_id:'foo',
+        took: 3,
+        timed_out: false,
+        _shards: { total: 5, successful: 5, failed: 0 },
+        hits:
+        { total: 356853,
+            max_score: 1,
+            hits:
+            [ [Object],
+                [Object], ... 
+            ] 
+        } 
+    }
+    */
+
+    do {
+        const responseQueue = response.hits.hits
+        var body = []
+        responseQueue.forEach((hit) => {
+            /* schema for hit
+              { _index: 'scbilling-app-action-2018-11',
+                _type: 'doc',
+                _id: 'ff80808167330e6e01673442caa30002:app36428779',
+                _score: 1,
+                _source:
+                { id: 'ff80808167330e6e01673442caa30002:app36428779',
+                    appId: 'ff80808167330e6e01673442caa30002',
+                    appName: 'A4',
+                    ...
+                    } }
+            */
+
+            const defCodeReal = getDefCodeReal(hit)
+            if (defCodeReal && defCodeReal !== '') {
+                body.push({
+                    update: {
+                        _index: hit._index,
+                        _type: hit._type,
+                        _id: hit._id
+                    }
+                }, )
+                body.push({
+                    doc: {
+                        defCodeReal: defCodeReal
+                    }
+                })
+            }
+        })
+
+        // console.log("bulk body is: " + body);
+        if (body.length > 0) {
+            await esClient.bulk({
+                body: body,
+                timeout: '1m'
+            });
+        }
+
+        response = await esClient.scroll({
+            scrollId: response._scroll_id,
+            scroll: '30s'
+        })
+    } while (response.hits.hits.length);
+}
+
 
 async function scrollIndex2(esIndex, scrollCallback) {
 
@@ -357,4 +429,17 @@ async function scrollIndex2(esIndex, scrollCallback) {
             scroll: '30s'
         })
     } while (response.hits.hits.length);
+}
+
+function getDefCodeReal(hit) {
+    var defCodeReal = null
+    if (hit._index.includes('pekall-mdm-admin-log-') ||
+        hit._index.includes('pekall-mdm-dev-log-')) {
+        defCodeReal = mdmService.defCodeByOrgId(hit._source.operatorOrgCode)
+    } else if (hit._index.includes('uni-auth-dev-login-log-')) {
+        defCodeReal = mdmService.defCodeByAccount(hit._source.account)
+    } else if (hit._index.includes('pekall-dev-app-log-')) {
+        defCodeReal = mdmService.defCodeByOrgCode(hit._source.orgCode)
+    }
+    return defCodeReal
 }
