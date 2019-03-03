@@ -153,21 +153,25 @@ app.get('/check_def_code_for_index', async function (req, res) {
     var list = []
     await scrollIndex2(esIndex, (hit) => {
         const defCodeReal = getDefCodeReal(hit)
-        if (hit._source.defCodeReal && hit._source.defCodeReal === defCodeReal) {
-        } else {
-            // console.log(`push hit: ${hit._source}`);
-            list.push(hit)
+        if (defCodeReal) {
+            if (hit._source.defCodeReal &&
+                hit._source.defCodeReal === defCodeReal) {
+            } else {
+                console.log(`defCodeReal: ${defCodeReal}`)
+                console.log(`hist: ${util.inspect(hit)}`)
+                list.push(hit)
+            }
         }
     })
 
     if (list.length > 0) {
-        list.forEach((li) => {
-            console.log(li);
-        })
+        // list.forEach((li) => {
+        //     console.log(li);
+        // })
         res.status(500).send("Not valid!")
         return
     }
-    
+
     res.send("Valid!")
 })
 
@@ -178,6 +182,7 @@ app.get('/check_def_code_for_index', async function (req, res) {
 app.get('/is_indices_equal', async function (req, res) {
     const index1 = req.query.index1
     const index2 = req.query.index2
+    const skip = req.query.skip
 
     if (!await es.isEsIndexExist(index1)) {
         res.status(404).send(`index ${inde1} not found!`)
@@ -202,11 +207,11 @@ app.get('/is_indices_equal', async function (req, res) {
         map1.set(hit._id, hit._source)
     })
 
-    await scrollIndex2(index1, (hit) => {
+    await scrollIndex2(index2, (hit) => {
         map2.set(hit._id, hit._source)
     })
 
-    if (!compareMaps(map1, map2)) {
+    if (!compareMaps(map1, map2, skip)) {
         res.send("Not equal!")
         return
     }
@@ -215,7 +220,7 @@ app.get('/is_indices_equal', async function (req, res) {
 })
 
 
-function compareMaps(map1, map2) {
+function compareMaps(map1, map2, ignoreKey) {
     var testVal;
     if (map1.size !== map2.size) {
         console.log(`size not equal, size1: ${map1.size}, size2: ${map2.size}`);
@@ -225,11 +230,30 @@ function compareMaps(map1, map2) {
         testVal = map2.get(key);
         // in cases of an undefined value, make sure the key
         // actually exists on the object so there are no false positives
+        // if (ignoreKey) {
+        //     console.log(`ignore key: ${ignoreKey}`)
+        //     if (_.isEqual(
+        //         _.omit(testVal, [ignoreKey]),
+        //         _.omit(val), [ignoreKey])) {
+        //         continue
+        //     } else {
+        //         return false
+        //     }
+        // } else {
+        //     if (!_.isEqual(testVal, val) || (testVal === undefined && !map2.has(key))) {
+        //         console.log(`map1: ${key},  ${util.inspect(val)}`);
+        //         console.log(`map2: ${key}, ${util.inspect(testVal)}`);
+        //         return false;
+        //     }
+        // }
+        
         if (!_.isEqual(testVal, val) || (testVal === undefined && !map2.has(key))) {
             console.log(`map1: ${key},  ${util.inspect(val)}`);
             console.log(`map2: ${key}, ${util.inspect(testVal)}`);
             return false;
         }
+        // console.log(`value1: ${util.inspect(val)}`)
+        // console.log(`value2: ${util.inspect(testVal)}`)
     }
     return true;
 }

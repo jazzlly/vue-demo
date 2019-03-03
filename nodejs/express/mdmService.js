@@ -30,6 +30,8 @@ connection.query('select id, org_code_real, def_code_real from mdm_org',
       orgIdMap.set(row.id, row.def_code_real)
       orgCodeMap.set(row.org_code_real, row.def_code_real)
     })
+    
+    console.log(`org count: ${orgIdMap.size}`)
     console.log("Read mysql org data done!");
 });
 
@@ -44,6 +46,7 @@ connection.query('select account, org_code from mdm_user',
     results.forEach(row => {
       userAccountMap.set(row.account, row.org_code)
     })
+    console.log(`user count: ${userAccountMap.size}`)
     console.log("Read mysql user data done!");
 });
 

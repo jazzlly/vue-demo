@@ -14,7 +14,8 @@
     "axios": "^0.18.0",
     "form-data": "^2.3.3",
     "mocha": "^6.0.2",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "sync-request": "^6.0.0"
   },
   "scripts": {
     "test": "mocha"
