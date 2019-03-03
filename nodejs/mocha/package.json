@@ -1,0 +1,19 @@
+{
+  "name": "nocha-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "mocha",
+    "demo"
+  ],
+  "author": "ryan",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^6.0.2",
+    "should": "^13.2.3"
+  }
+}
