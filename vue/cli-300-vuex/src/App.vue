@@ -19,16 +19,24 @@
 
     export default {
         
+        /*
         data() {
             return {
                 counter: 0
             }
         },
-        
+        */
         components: {
             appCounter: Counter,
             appResult: Result,
         }
     }
 </script>
+
+<style>
+#app {
+    background-color: black;
+}
+</style>
+
 
