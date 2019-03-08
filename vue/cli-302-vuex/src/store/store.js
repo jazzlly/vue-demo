@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+// import mocha from 'mocha';
+// import chai from 'chai';
 
 // https://scrimba.com/playlist/pnyzgAP
 
@@ -224,8 +226,10 @@ console.log(`count in main store: ${store.state.counter}`);
 
 
 // Testing
+/*
 mocha.setup('bdd');
 let assert = chai.assert;
 let expect = chai.expect;
 
 mocha.run();
+*/
