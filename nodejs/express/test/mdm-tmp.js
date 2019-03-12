@@ -77,7 +77,6 @@ describe("# mdm admin test", function () {
           },
         })
 
-        // console.log(loginUserResp);
         console.log(loginUserResp.headers['set-cookie']);
         assert.equal(loginUserResp.status, 200)
         assert.equal(loginUserResp.data.account, 'pekall')

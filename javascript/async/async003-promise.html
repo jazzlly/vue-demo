@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
-    <script src="../../note001/comm/vue.js"></script>
+    <script src="../../vue/note001/comm/vue.js"></script>
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
 </head>
@@ -27,12 +27,36 @@
             },
         })
 
+        function foo() {
+            const p = new Promise(function(resolve, error) {
+                resolve("hello foo")
+            })
+            console.log("before then...");
+
+            p.then(
+                // onFufilled 就是resolve函数
+                function(value) {
+                console.log(`onfufilled: ${value}`);
+            },
+            // onError就是error函数
+             function(reason) {
+                 console.log(`onerror: ${reason}`)
+             })
+             console.log('after then!');
+        }
+
+        foo()
+        console.log('hello bar')
+
         var counter = 0
 
         // 模拟发送http请求，第一次成功，第二次失败
         function sendRequest() {
-            // Promise的参数是一个function, 这个function
-            //  第一个参数是executor function
+            // Promise的三个function: executor, resolve, reject
+
+            // Promise的参数是一个function, executor, 
+            // executor
+            //  第一个参数是resolve function
             //  第二个参数是reject function
             const getIds = new Promise((resolve, reject) => {
                 // 传入promise的函数会被立即调用！
