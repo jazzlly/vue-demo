@@ -1,5 +1,4 @@
-const except = require('chai').expect
-
+const expect = require('chai').expect
 var _ = require('lodash');
 
 var obj1 = {
@@ -36,14 +35,14 @@ var obj1 = {
   );
   
   console.log(result);
-  except(result).to.be.true
+  expect(result).to.be.true
 
-  except(_.isEqual(
+  expect(_.isEqual(
       _.omit(obj1,  ['creation', 'deletion']),
       _.omit(obj3,  ['creation', 'deletion'])
   )).to.be.false
 
-  except(_.isEqual(
+  expect(_.isEqual(
     _.omit(obj1,  ['creation', 'deletion']),
     _.omit(obj4,  ['creation', 'deletion'])
 )).to.be.false
