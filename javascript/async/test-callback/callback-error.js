@@ -17,7 +17,7 @@ function foo(num, callback) {
 
 
 function calcSquarePromise(num) {
-    const promise = new Promise(function (resolve, error) {
+    return new Promise(function (resolve, error) {
         setTimeout(() => {
             if (typeof num !== 'number') {
                 error(new Error('Argument of type number is excepted!'));
@@ -27,9 +27,9 @@ function calcSquarePromise(num) {
             resolve(result)
         }, 1000)
     })
-    return promise
 }
 
+/*
 // 当promise的then函数中，1. 抛出异常， 2. reject()时
 // 后续promise的调用链条中，就会发生异常,then 中的reject或catch就会被调用
 calcSquarePromise(1)
@@ -57,7 +57,7 @@ calcSquarePromise(1)
     }).catch(reason => {
         console.log(reason); // 两种异常处理的效果一样， catch的更简洁一些
     })
-
+*/
 exports.foo = foo
 exports.calcSquarePromise = calcSquarePromise
 
