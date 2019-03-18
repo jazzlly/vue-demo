@@ -36,7 +36,7 @@ const doo = new Doo()
 doo.log()
 
 // import a named prototype
-const Doz = require('./Doz').Doz
+const Doz = require('./D    oz').Doz
 const doz = new Doz()
 doz.log()
 
