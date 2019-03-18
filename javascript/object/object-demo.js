@@ -1,5 +1,6 @@
 "use strict";
 var expect = require("chai").expect;
+var _ = require('lodash');
 
 function naiveObject() {
     var person = new Object();
@@ -18,7 +19,7 @@ const p = naiveObject();
 console.log(p);
 p.sayName();
 
-//
+// 和naive boject类似, 感觉就是一种简单的写法
 function simpleObject() {
     // 这个对象也是没有类型的
     return {
@@ -36,30 +37,39 @@ console.log(sp);
 sp.sayName();
 
 // sayName是两个不同的函数！
-// expect(sp).to.deep.equal(p)
+expect(sp).to.be.not.equal(p)
+expect(sp instanceof Object).to.be.true
+expect(p instanceof Object).to.be.true
+expect(_.isEqual(
+    _.omit(p, ['sayName']),
+    _.omit(sp, ['sayName'])
+)).to.be.true
 
 /*
     js的两种内置属性：数据属性和访问器属性
 
-    1. 数据属性
-    [[Configurable]]： 
-        能否 通过 delete 删除 属性 从而 重新 定义 属性， 
-        能否 修改 属性 的 特性， 或者 能否 把 属性 修改 为 访问 器 属性。 
-        像 前面 例子 中 那样 直接 在 对象 上 定义 的 属性， 
-        它们 的 这个 特性 默认值 为 true。 
-    [[Enumerable]]： 
-        表示 能否 通过 for- in 循环 返回 属性。 
-        像 前面 例子 中 那样 直接 在 对象 上 定义 的 属性， 
-        它们 的 这个 特性 默认值 为 true。 
-    [[Writable]]： 
-        表示 能否 修改 属 性的 值。 
-        像 前面 例子 中 那样 直接 在 对象 上 定义 的 属性，
-         它们 的 这个 特性 默认值 为 true。
-    [[Value]]： 
-        包含 这个 属性 的 数据 值。 
-        读取 属性 值 的 时候， 从这 个 位置 读；
-         写入 属性 值 的 时候， 把 新 值 保存 在这 个位 置。 
-         这个 特性 的 默认值 为 undefined。
+    1.数据属性
+        [[Configurable]]：
+            能否通过delete删除属性从而重新定义属性，
+            能否修改属性的特性，或者能否把属性修改为访问器属性。
+            像前面例子中那样直接在对象上定义的属性，
+            它们的这个特性默认值为true。
+
+        [[Enumerable]]：
+            表示能否通过for-in循环返回属性。
+            像前面例子中那样直接在对象上定义的属性，
+            它们的这个特性默认值为true。
+
+        [[Writable]]：
+            表示能否修改属性的值。
+            像前面例子中那样直接在对象上定义的属性，
+            它们的这个特性默认值为true。
+
+        [[Value]]：
+            包含这个属性的数据值。
+            读取属性值的时候，从这个位置读；
+            写入属性值的时候，把新值保存在这个位置。
+            这个特性的默认值为undefined。
 */
 function defProps() {
     console.log("------------------------------------");
@@ -95,13 +105,21 @@ function defProps() {
 defProps();
 
 /* 访问器属性：
-    [[Configurable]]： 表示 能否 通过 delete 删除 属性 从而 重新 定义 属性， 
-        能否 修改 属性 的 特性， 或者 能否 把 属性 修改 为数 据 属性。 
-        对于 直接 在 对象 上 定义 的 属性， 这个 特性 的 默认值 为 true。
-    [[Enumerable]]： 表示 能否 通过 for- in 循环 返回 属性。 
-        对于 直接 在 对象 上 定义 的 属性， 这个 特性 的 默认值 为 true。 
-    [[Get]]： 在读 取 属性 时调 用的 函数。 默认值 为 undefined。 
-    [[Set]]： 在 写入 属性 时调 用的 函数。 默认值 为 undefined。
+
+    [[Configurable]]：
+        表示能否通过delete删除属性从而重新定义属性，
+        能否修改属性的特性，或者能否把属性修改为数据属性。
+        对于直接在对象上定义的属性，这个特性的默认值为true。
+
+    [[Enumerable]]：
+        表示能否通过for-in循环返回属性。
+        对于直接在对象上定义的属性，这个特性的默认值为true。
+
+    [[Get]]：
+        在读取属性时调用的函数。默认值为undefined。
+
+    [[Set]]：
+        在写入属性时调用的函数。默认值为undefined。
 
 */
 function defAccessor() {
@@ -128,25 +146,3 @@ function defAccessor() {
 }
 defAccessor();
 
-function defProps2() {
-    var book = {};
-    Object.defineProperties(book, {
-        _year: {
-            value: 2004
-        },
-        edition: {
-            value: 1
-        },
-        year: {
-            get: function () {
-                return this._year;
-            },
-            set: function (newValue) {
-                if (newValue > 2004) {
-                    this._year = newValue;
-                    this.edition += newValue - 2004;
-                }
-            }
-        }
-    });
-}

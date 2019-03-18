@@ -1,5 +1,6 @@
 "use strict";
 var expect = require("chai").expect;
+var _ = require('lodash')
 
 // 创建对象：工厂模式
 function factoryMethod() {
@@ -18,6 +19,8 @@ function factoryMethod() {
     }
     var person1 = createPerson(" Nicholas", 29, "Software Engineer");
     var person2 = createPerson(" Greg", 27, "Doctor");
+    var person3 = createPerson(" Nicholas", 29, "Software Engineer");
+    
     console.log(`factory method, person1`);
     console.log(person1);
     console.log(`factory method, person2`);
@@ -25,6 +28,13 @@ function factoryMethod() {
 
     // 问题：不知道person的类型
     expect(person1).to.be.instanceOf(Object) // 就是个对象！
+
+    expect(
+        _.isEqual(
+            _.omit(person1, ['sayName']),
+            _.omit(person3, ['sayName'])
+        )
+    ).to.be.true
 }
 
 factoryMethod()
@@ -121,114 +131,3 @@ function prototypePattern() {
 }
 
 prototypePattern()
-
-function prototypePattern1() {
-    function Person(name, age, job) {
-        this.name = name;
-        this.age = age;
-        this.job = job;
-    }
-    Person.prototype.country = 'China'
-    Person.prototype.sayName = function () {
-        console.log(this.name);
-    }
-    Person.prototype.sayJob = function () {
-        console.log(this.job);
-    }
-
-    var person1 = new Person(" Nicholas", 29, "Software Engineer");
-    var person2 = new Person(" Greg", 27, "Doctor");
-
-    expect(Person.prototype).to.be.not.null
-    expect(Person.prototype.constructor).to.be.equal(Person)
-
-    // 检查对象的原型！
-    expect(person1.__proto__).to.be.equal(Person.prototype)
-    expect(person2.__proto__).to.be.equal(Person.prototype)
-    expect(Object.getPrototypeOf(person1)).to.be.eql(Person.prototype)
-    expect(Object.getPrototypeOf(person2)).to.be.eql(Person.prototype)
-    expect(Person.prototype.isPrototypeOf(person1)).to.be.true
-    expect(Person.prototype.isPrototypeOf(person2)).to.be.true
-
-    expect(Person.prototype.country).to.be.eql('China')
-    expect(person1.country).to.be.eq('China')
-    expect(person2.country).to.be.eq('China')
-    expect(person1.country).to.be.equal(Person.prototype.country)
-    expect(person2.country).to.be.equal(Person.prototype.country)
-
-    expect(person1.hasOwnProperty('country')).to.be.false
-
-    person2.country = 'Japan'
-    expect(person2.country).to.be.not.equal(Person.prototype.country)
-    expect(person2.hasOwnProperty('country')).to.be.true
-
-    person1.cellphone = '15011005932'
-    console.log(person1.cellphone); // 先找person1对象，是否有cellphone, 
-    // 如果没有，就找person1的原型对象
-    expect(person1.hasOwnProperty('cellphone')).to.be.true
-
-    expect('country' in person1).to.be.true
-    expect('country' in person2).to.be.true
-    expect('foo' in person1).to.be.false
-}
-
-prototypePattern1()
-
-function prototypePattern2() {
-    console.log('----------------------------------');
-    console.log('for in object');
-
-    function Person(name, age, job) {
-        this.name = name;
-        this.age = age;
-        this.job = job;
-    }
-    Person.prototype.country = 'China'
-    Person.prototype.sayName = function () {
-        console.log(this.name);
-    }
-    Person.prototype.sayJob = function () {
-        console.log(this.job);
-    }
-
-    var person1 = new Person(" Nicholas", 29, "Software Engineer");
-    for (const p in person1) {
-        console.log(p);
-        // person1.getProperty(p)
-    }
-    console.log(Object.keys(person1));
-    console.log(Object.keys(Person.prototype));
-}
-
-prototypePattern2()
-
-function prototypeSimple() {
-    console.log('----------------------------------');
-
-    function Person() {}
-    Person.prototype = {
-        // constructor: Person,
-        name: "Nicholas",
-        age: 29,
-        job: "Software Engineer",
-        sayName: function () {
-            console.log(this.name);
-        }
-    };
-    // Person.prototype的constructor不再指向Person
-
-    var foo = new Person()
-    expect(foo instanceof Object).to.be.true
-    expect(foo instanceof Person).to.be.true
-    // expect(foo.constructor).to.be.equal(Object)
-    expect(foo.constructor)
-        .to.be.equal(Person.prototype.constructor)
-        .and.to.be.equal(Object)
-        .but.not.equal(Person)
-
-    expect(Person.prototype.constructor).to.be.eql(Object)
-    expect(Person.prototype.constructor).to.be.not.eql(Person)
-    
-}
-
-prototypeSimple()
