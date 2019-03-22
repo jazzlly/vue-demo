@@ -82,3 +82,4 @@ function problem() {
 
 problem()
 
+console.log(person.name)
