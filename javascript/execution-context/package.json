@@ -1,0 +1,17 @@
+{
+  "name": "execution-context",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scope.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "lodash": "^4.17.11",
+    "util": "^0.11.1"
+  }
+}
