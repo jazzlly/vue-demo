@@ -5,8 +5,10 @@ var expect = require('chai').expect
 
 var globalContext = null
 
-console.log(util.inspect(this));
 // !!! nodejs里面 一开始this为一个{}
+
+console.log(this);
+// console.log(util.inspect(this));
 
 // f1定义在global环境中，v0, v1
 function f1() {
