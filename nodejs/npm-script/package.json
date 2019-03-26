@@ -1,0 +1,21 @@
+{
+  "name": "npm-script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "foo": "echo foo...",
+    "bar": "echo bar...",
+    "wah": "npm run foo && npm run bar",
+    "woo": "npm run foo & npm run bar & sleep 3 & wait",
+    "eslint": "eslint *.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.15.3",
+    "npm-run-all": "^4.1.5"
+  }
+}
