@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="./elasticsearch.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var client = new elasticsearch.Client({
+            host: 'http://192.168.11.32:9200',
+            log: 'trace'
+        });
+
+        client.ping({
+            requestTimeout: 30000,
+        }, function (error) {
+            if (error) {
+                console.error('elasticsearch cluster is down!');
+            } else {
+                console.log('All is well');
+            }
+        });
+
+        client.search({
+            index: 'uni-auth-authorized-visit-log-*',
+            body: {
+                query: {
+                    term: {
+                        account: 'pekall'
+                    }
+                }
+            }
+        }).then(function (resp) {
+            var hits = resp.hits.hits;
+            console.log(hits);
+        }, function (err) {
+            console.trace(err.message);
+        });
+    </script>
+
+</body>
+
+</html>

@@ -12,7 +12,6 @@ var _ = require('lodash')
 这样就在继承了SuperType的属性和方法的基础上又添加了一个新方法。
 */
 function foo() {
-
     function SuperType() {
         this.property = true;
         this.property2 = true;
