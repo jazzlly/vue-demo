@@ -105,7 +105,7 @@ constructorPattern()
 
 function constructorPattern2() {
     function SuperType(name) {
-        this.name = name;
+        this.name = name;patlist.txt
     }
 
     function SubType() {
