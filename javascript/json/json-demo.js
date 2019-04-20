@@ -41,7 +41,7 @@ var appSandboxPolicies = {
     }]
 }
 
-// console.log(JSON.stringify(appSandboxPolicies));
+console.log(JSON.stringify(appSandboxPolicies));
 
 
 var appSandboxPolicies1 = {
@@ -51,4 +51,4 @@ var appSandboxPolicies1 = {
     policies: []
 }
 
-console.log(JSON.stringify(appSandboxPolicies1));
+// console.log(JSON.stringify(appSandboxPolicies1));
