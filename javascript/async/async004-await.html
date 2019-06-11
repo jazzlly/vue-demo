@@ -75,9 +75,11 @@
             
             async function foo() {
                 console.log("enter async func ...");
+                // 传入resolve里面的参数，就是await返回值
                 const IDs = await getIds
                 console.log(IDs);
 
+                // 传入resolve的参数，就是await的返回值
                 const id = await getRecipe('12345')
                 console.log(`id: ${id}`);
 

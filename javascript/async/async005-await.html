@@ -66,7 +66,8 @@
             var sequentialStart = async function () {
                 console.log('==SEQUENTIAL START==');
 
-                // 如果 await 操作符后的表达式不是一个 Promise 对象, 则它会被转换成一个 resolved 状态的 Promise 对象
+                // 如果 await 操作符后的表达式不是一个 Promise 对象, 
+                // 则它会被转换成一个 resolved 状态的 Promise 对象
                 // await会等待
                 const slow = await resolveAfter2Seconds();
                 console.log(slow);
@@ -87,7 +88,8 @@
             var conCurStart = async function () {
                 console.log('==CONCUR START==');
 
-                // 如果 await 操作符后的表达式不是一个 Promise 对象, 则它会被转换成一个 resolved 状态的 Promise 对象
+                // 如果 await 操作符后的表达式不是一个 Promise 对象, 
+                // 则它会被转换成一个 resolved 状态的 Promise 对象
 
                 // 并发向前， new promise中的逻辑并发
                 const slow = resolveAfter2Seconds();

@@ -61,7 +61,7 @@ calcSquarePromise(1)
 exports.foo = foo
 exports.calcSquarePromise = calcSquarePromise
 
-/*
+/* callback异常模式， callback的第一个参数为异常
 let cb = function (error, result) {
     if (error !== null) {
         console.log(`result in error: ${result}`);

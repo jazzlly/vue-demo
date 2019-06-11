@@ -36,12 +36,12 @@
             p.then(
                 // onFufilled 就是resolve函数
                 function(value) {
-                console.log(`onfufilled: ${value}`);
-            },
-            // onError就是error函数
-             function(reason) {
-                 console.log(`onerror: ${reason}`)
-             })
+                    console.log(`onfufilled: ${value}`);
+                },
+                // onError就是error函数
+                function(reason) {
+                    console.log(`onerror: ${reason}`)
+                })
              console.log('after then!');
         }
 
@@ -52,17 +52,19 @@
 
         // 模拟发送http请求，第一次成功，第二次失败
         function sendRequest() {
-            // Promise的三个function: executor, resolve, reject
+            // Promise三要素: executor, resolve, reject
 
             // Promise的参数是一个function, executor, 
-            // executor
+            // executor 包括两个参数
             //  第一个参数是resolve function
             //  第二个参数是reject function
             const getIds = new Promise((resolve, reject) => {
-                // 传入promise的函数会被立即调用！
-                // resolver, reject会在futher被调用
-                // resolver, reject可以在callback函数中被调用！
+                /*
+                传入promise的executor函数会被立即调用！
+                  executor里面会调用异步函数
+                  在异步函数callback中调用resolve和reject    
                 console.log('promise func begin...');
+                */
 
                 // 这里模拟一个ajax请求，从服务器获取数据!
                 // 在请求成功后，可以调用resolve
