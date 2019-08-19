@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "mysql2": "^1.6.5",
     "sequelize": "^5.8.6",
+    "sync-request": "^6.1.0",
     "xlsx": "^0.14.3"
   }
 }

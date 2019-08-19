@@ -4,10 +4,11 @@ let XLSX = require('xlsx');
 
 var workbook = XLSX.utils.book_new();
 // var dbname = 'uni_auth'
-var dbname = 'mdm_reactor'
+// var dbname = 'mdm_reactor'
+var dbname = 'cmc'
 
 const sequelize = new Sequelize(dbname, 'root', 'pekall1234', {
-  host: '192.168.11.30',
+  host: '192.168.10.197',
   dialect: 'mysql'
 });
 
@@ -419,12 +420,6 @@ function getColumnDescription(column) {
     return '文档标签'
     case 'download_policies':
     return '下载策略'
-    case 'file_name':
-    return '文件名'
-    case 'file_size':
-    return '文件大小'
-    case 'file_type':
-    return '文件类型'
     case 'security_settings':
     return '安全设置'
     case 'upload_account':
@@ -451,12 +446,294 @@ function getColumnDescription(column) {
     return '操作者ID'
     case 'operator_name':
     return '操作者名称'
-    case '':
-    return ''
+    case 'message':
+      return '消息'
+    case 'value':
+      return '值'
+    case 'home_carrier':
+      return '营运商'
+    case 'police_type':
+      return '警种'
+    case 'police_id':
+      return '警号'
+    case 'id_number':
+      return '身份证号'
+    case 'total_count':
+      return '总计'
 
     default:
-    break;
+      return regexCheck(column)
   }
-  return ''
+}
+// test xxx xxx_xxx or xxx_xxx_xxx, 然后exec
+function regexCheck(column) {
+  const regexOneWord = /^([^_]+)$/
+  const regexTwoWord = /^([^_]+)_([^_]+)$/
+  const regexThreeWord = /^([^_]+)_([^_]+)_([^_]+)$/
+
+  let array = null
+  if (regexOneWord.test(column)) {
+    array = regexOneWord.exec(column)
+  } else if (regexTwoWord.test(column)) {
+    array = regexTwoWord.exec(column)
+  } else if (regexThreeWord.test(column)) {
+    array = regexThreeWord.exec(column)
+  } else {
+    return ''
+  }
+
+  let fullName = ''
+  for (const e of array) {
+    fullName = fullName.concat(translateSimpleWord(e))
+  }
+  return fullName
+}
+
+function translateSimpleWord(word) {
+  switch(word) {
+    case 'id':
+      return '唯一标识'
+    case 'code':
+    case 'codes':
+      return '代码'
+    case 'desc':
+    case 'description':
+      return '描述'
+    case 'action':
+    case 'actions':
+      return '动作'
+    case 'event':
+      return '事件'
+    case 'time':
+      return '时间'
+    case 'object':
+      return '对象'
+    case 'name':
+      return '名称'
+    case 'type':
+    case 'types':
+      return '类型'
+    case 'occur':
+      return '发生'
+    case 'source':
+      return '来源'
+    case 'rule':
+      return '规则'
+    case 'equipment':
+      return '物理设备'
+    case 'policy':
+      return '策略'
+    case 'terminal':
+      return '终端设备'
+    case 'stat':
+    case 'state':
+    case 'status':
+      return '状态'
+    case 'log':
+      return '日志'
+    case 'message':
+      return '消息'
+    case 'confirmation':
+      return '确认'
+    case 'user':
+      return '用户'
+    case 'data':
+      return '数据'
+    case 'template':
+      return '模板'
+    case 'group':
+      return '组'
+    case 'ip':
+      return 'IP地址'
+    case 'port':
+      return '端口'
+    case 'target':
+      return '目标'
+    case 'protocol':
+      return '协议'
+    case 'device':
+      return '终端设备'
+    case 'org':
+      return '机构'
+    case 'message':
+      return '消息'
+    case 'export':
+      return '导出'
+    case 'path':
+      return '路径'
+    case 'area':
+      return '区域'
+    case 'cmc':
+      return '集中管控中心'
+    case 'collect':
+      return '采集'
+    case 'report':
+      return '上报'
+    case 'topic':
+      return '主题'
+    case 'mapping':
+      return '映射'
+    case 'platform':
+      return '平台'
+    case 'host':
+      return '主机'
+    case 'manufactory':
+      return '制造商'
+    case 'phone':
+      return '电话'
+    case 'sys':
+    case 'system':
+      return '系统'
+    case 'loc':
+    case 'location':
+      return '位置'
+    case 'service':
+    case 'services':
+      return '服务'
+    case 'vendor':
+      return '提供商'
+    case 'key':
+    case 'keyword':
+      return '关键字'
+    case 'count':
+      return '数量'
+    case 'item':
+      return '对象'
+    case 'value':
+      return '值'
+    case 'mac':
+      return 'MAC地址'
+    case 'date':
+      return '日期'
+    case 'category':
+      return '分类'
+    case 'method':
+      return '方法'
+    case 'account':
+      return '账号'
+    case 'belong':
+      return '归属'
+    case 'version':
+      return '版本'
+    case 'whether':
+      return '是否'
+    case 'install':
+      return '安装'
+    case 'app':
+      return '应用'
+    case 'url':
+      return '访问地址'
+    case 'file':
+      return '文件'
+    case 'size':
+      return '大小'
+    case 'appraise':
+      return '评论'
+    case 'num':
+      return '数量'
+    case 'rank':
+      return '排名'
+    case 'create':
+      return '创建'
+    case 'dev':
+      return '终端设备'
+    case 'UUID':
+      return '全局唯一标识'
+    case 'download':
+      return '下载'
+    case 'icon':
+      return '图标'
+    case 'min':
+      return '最小'
+    case 'sdk':
+      return 'SDK'
+    case 'permission':
+      return '权限'
+    case 'pkg':
+      return '程序包'
+    case 'recommend':
+      return '推荐'
+    case 'score':
+      return '评分'
+    case 'search':
+      return '搜索'
+    case 'tag':
+      return '标签'
+    case 'auth':
+    case 'authorize':
+      return '授权'
+    case 'publish':
+      return '发布'
+    case 'model':
+      return '型号'
+    case 'manufacturer':
+      return '制造商'
+    case 'number':
+      return '号码'
+    case 'imsi':
+      return 'IMSI'
+    case 'developer':
+      return '开发者'
+    case 'batter':
+    case 'battery':
+      return '电池'
+    case 'level':
+      return '水平'
+    case 'bluetooth':
+      return '蓝牙'
+    case 'physical':
+      return '物理'
+    case 'address':
+      return '地址'
+    case 'cert':
+      return '证书'
+    case 'sn':
+      return '序列号'
+    case 'cpu':
+      return 'CPU'
+    case 'current':
+      return '当前'
+    case 'carrier':
+      return '营运商'
+    case 'network':
+      return '网络'
+    case 'roaming':
+      return '漫游'
+    case 'chip':
+      return '芯片'
+    case 'kernel':
+      return '内核'
+    case 'nfc':
+      return 'NFC'
+    case 'os':
+      return '操作系统'
+    case 'processor':
+      return '处理器'
+    case 'ram':
+      return '系统内存'
+    case 'screen':
+      return '屏幕'
+    case 'resolution':
+      return '解析率'
+    case 'wifi':
+      return 'WIFI'
+    case 'wlan':
+      return 'WLAN'
+    case 'content':
+      return '内容'
+    case 'punish':
+      return '出发'
+    case 'contact':
+      return '联系人'
+    case 'operation':
+      return '操作'
+    case 'project':
+      return '项目'
+    case 'res':
+    case 'resource':
+      return '资源'
+    default:
+      return ''
+  }
 }
 

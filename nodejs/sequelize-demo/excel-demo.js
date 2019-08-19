@@ -1,6 +1,5 @@
 XLSX = require('xlsx');
 
-
 function readExcel() {
     var workbook = XLSX.readFile('./unilog.xlsx');
     
@@ -61,7 +60,6 @@ function createExcel2() {
 }
 createExcel2();
 
-console.log(XLSX.version);
 
 
 
