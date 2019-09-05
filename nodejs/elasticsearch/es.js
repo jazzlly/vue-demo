@@ -9,15 +9,45 @@ var client = new elasticsearch.Client({
     log: 'trace'
 });
 
-// client.ping({
-//     requestTimeout: 1000
-// }, function (error) {
-//     if (error) {
-//         console.trace('elasticsearch cluster is down!');
-//     } else {
-//         console.log('All is well');
-//     }
-// });
+client.ping({
+    requestTimeout: 1000,
+}, function (error) {
+    if (error) {
+        console.trace('elasticsearch cluster is down!');
+    } else {
+        console.log('All is well');
+    }
+});
+
+client.cat.health({}, function (error, resp) {
+    console.log('resp')
+    console.log(typeof (resp))
+    console.log(resp)
+    // todo: 如果resp里面没有yellow 或green, 则直接退出node程序
+})
+
+client.cat.indices({}, function (error, resp) {
+    var indices = []
+    var lines = resp.split(/\r?\n/)
+    lines.forEach(function (data) {
+        var tokens = data.split(/ +/)
+        if (tokens[2]) {
+            console.log(tokens[2])
+            indices.push(tokens[2])
+        }
+    })
+    console.log('indices')
+    console.log(indices)
+})
+
+
+// todo: test count of each indices
+client.count({
+    index: 'foowaa'
+}, function (error, resp) {
+    console.log(`resp is`)
+    console.log(resp)
+});
 
 
 // client.search({
@@ -28,13 +58,6 @@ var client = new elasticsearch.Client({
 //     console.log(hits)
 // }, function (error) {
 //     console.trace(error.message);
-// });
-
-// client.count({
-//     index: 'scbilling-app-action-2018-11'
-// }, function (err, resp) {
-//     console.log("scbilling-app-action-2018-11 count: " + resp);
-//     console.log(resp.count);
 // });
 
 /*
@@ -64,7 +87,7 @@ const scoll = async function () {
             console.log(util.inspect(hit._source));
         })
 
-        response =  await client.scroll({
+        response = await client.scroll({
             scrollId: response._scroll_id,
             scroll: '30s'
         })
