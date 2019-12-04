@@ -1,11 +1,10 @@
 const Sequelize = require('sequelize');
-const util = require('util')
 let XLSX = require('xlsx');
 
 var workbook = XLSX.utils.book_new();
 // var dbname = 'uni_auth'
 // var dbname = 'mdm_reactor'
-var dbname = 'cmc'
+const dbname = 'mdm_reactor'
 
 const sequelize = new Sequelize(dbname, 'root', 'pekall1234', {
   host: '192.168.10.197',

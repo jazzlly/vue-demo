@@ -5,6 +5,11 @@
     "elasticsearch": "^16.3.0",
     "minimist": "^1.2.0",
     "moment": "^2.24.0",
-    "util": "^0.11.1"
+    "util": "^0.11.1",
+    "cheerio": "^1.0.0-rc.3",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.8.6",
+    "sync-request": "^6.1.0",
+    "xlsx": "^0.14.3"
   }
 }

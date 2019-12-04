@@ -8,23 +8,22 @@ var client = new elasticsearch.Client({
     log: 'info'
 });
 
-
 const scoll = async function () {
     // start things off by searching, setting a scroll timeout, and pushing
     // our first response into the queue to be processed
     var response = await client.search({
-        index: 'uni-auth-web-login-log-2019-08',
+        index: 'pekall-dev-app-log-2019-09',
         scroll: '60s',
-        body: {
-            query: {
-                range: {
-                    createTime: {
-                        gte: 1565539200000,
-                        lte: 1565798400000
-                    }
-                }
-            },
-        }
+        // body: {
+        //     query: {
+        //         range: {
+        //             createTime: {
+        //                 gte: 0,
+        //                 lte: 565798400000
+        //             }
+        //         }
+        //     },
+        // }
     })
 
     do {
