@@ -1,7 +1,7 @@
 var util = require('util')
 var await = require('await')
 
-var esHost = '192.168.11.90:9200'
+var esHost = '192.168.11.111:9200'
 
 var elasticsearch = require('elasticsearch')
 var client = new elasticsearch.Client({
