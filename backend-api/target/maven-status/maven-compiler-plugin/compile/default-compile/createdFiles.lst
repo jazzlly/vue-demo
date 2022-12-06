@@ -1,0 +1,7 @@
+com\example\flywaydemo\domain\AccountRepository.class
+com\example\flywaydemo\domain\UserRepository.class
+com\example\flywaydemo\controller\AccountController.class
+com\example\flywaydemo\domain\Account.class
+com\example\flywaydemo\domain\Account$AccountBuilder.class
+com\example\flywaydemo\domain\User.class
+com\example\flywaydemo\FlywayDemoApplication.class
