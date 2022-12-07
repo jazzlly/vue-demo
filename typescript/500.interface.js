@@ -16,6 +16,21 @@ var opt3 = {
     program: 'test3',
     params: () => 'hahaha'
 };
-console.info(opt1);
-console.info(opt2);
-console.info(opt3);
+// console.info(opt1);
+// console.info(opt2);
+// console.info(opt3);
+function printOpts(opt) {
+    console.info(`program: ${opt.program}`);
+    // console.info(opt instanceof RunOptions.type);
+}
+var drummer = {};
+drummer.name = 'tom';
+drummer.age = 34;
+drummer.inst = 'Drums';
+// console.info(drummer);
+var ryan = {};
+ryan.name = 'ryan';
+ryan.age = 43;
+ryan.inst = 'Drums';
+ryan.sport = 'badminton';
+console.info(ryan);

@@ -1,4 +1,5 @@
 
+// 写起来类似一个json
 interface IPersion {
     name: string,
     age: number,
@@ -36,11 +37,46 @@ var opt3 : RunOptions = {
     params: () => 'hahaha'
 }
 
-console.info(opt1);
-console.info(opt2);
-console.info(opt3);
+// console.info(opt1);
+// console.info(opt2);
+// console.info(opt3);
 
 function printOpts(opt: RunOptions) {
     console.info(`program: ${opt.program}`);
-    console.info(opt.program instanceof String);
+    // console.info(opt instanceof RunOptions.type);
 }
+
+
+interface CPerson {
+    name: string,
+    age: number
+}
+
+// 简单继承
+interface Athlete extends CPerson {
+    sport: string
+}
+
+// 简单继承
+interface Musician extends CPerson {
+    inst: string
+}
+
+// 多重继承
+interface AthleteMusician extends Athlete, Musician {
+}
+
+var drummer = <Musician>{}
+drummer.name = 'tom'
+drummer.age = 34
+drummer.inst = 'Drums'
+// console.info(drummer);
+
+var ryan = <AthleteMusician>{}
+ryan.name = 'ryan'
+ryan.age = 43
+ryan.inst = 'Drums'
+ryan.sport = 'badminton'
+console.info(ryan);
+
+
