@@ -5,7 +5,7 @@
     "child_process": "^1.0.2",
     "elasticsearch": "^16.7.2",
     "minimist": "^1.2.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "mysql2": "^1.6.5",
     "sequelize": "^5.8.6",
     "sync-request": "^6.1.0",
