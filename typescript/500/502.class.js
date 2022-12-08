@@ -1,19 +1,19 @@
 "use strict";
-class CPerson {
+class Person {
     constructor(name, age) {
         this.name = name;
         this.age = age;
-        CPerson.count++;
+        Person.count++;
     }
     dump() {
         console.info(`name: ${this.name}, age: ${this.age}`);
     }
 }
-CPerson.count = 0;
-var ryan1 = new CPerson('ryan', 32);
+Person.count = 0;
+var ryan1 = new Person('ryan', 32);
 // ryan1.dump()
 // 类继承, 可以多重继承， 不能继承多个类
-class CMusician extends CPerson {
+class CMusician extends Person {
     constructor(name, age, inst) {
         super(name, age);
         this.inst = inst;
@@ -36,4 +36,4 @@ class CAthleteMusician extends CMusician {
 }
 var cam = new CAthleteMusician('ryan', 32, 'piano', 'badminton');
 cam.dump();
-console.info(CPerson.count);
+console.info(Person.count);

@@ -481,8 +481,8 @@ function getColumnDescription(column) {
 // test xxx xxx_xxx or xxx_xxx_xxx, 然后exec
 function regexCheck(column) {
   const regexOneWord = /^([^_]+)$/
-  const regexTwoWord = /^([^_]+)_([^_]+)$/
-  const regexThreeWord = /^([^_]+)_([^_]+)_([^_]+)$/
+const regexTwoWord = /^([^_]+)_([^_]+)$/
+const regexThreeWord = /^([^_]+)_([^_]+)_([^_]+)$/
 
   let array = null
   if (regexOneWord.test(column)) {

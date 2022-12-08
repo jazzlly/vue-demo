@@ -1,23 +1,32 @@
-var esHostSrc = '192.168.10.197:9200'
-var esHostDest = '192.168.11.90:9200'
+var esHostSrc = '192.168.11.26'
+var esHostDest = '192.168.11.138' // todo: not 138
 
 var util = require('util')
 var moment = require('moment')
 const child_process = require("child_process");
 var elasticsearch = require('elasticsearch')
 
-// var argv = require('minimist')(process.argv.slice(2));
-// console.log(argv);
-
 var clientSrc = new elasticsearch.Client({
-    host: esHostSrc,
-    log: 'info'
-});
+    host: [
+      {
+        host: esHostSrc,
+        auth: 'elastic:Pekalles12#$',
+        protocol: 'http',
+        port: 9200
+      }
+    ]
+  });
 
 var clientDest = new elasticsearch.Client({
-    host: esHostDest,
-    log: 'info'
-});
+    host: [
+      {
+        host: esHostDest,
+        auth: 'elastic:Pekalles12#$',
+        protocol: 'http',
+        port: 9200
+      }
+    ]
+  });
 
 var scroll = async function (index) {
     // start things off by searching, setting a scroll timeout, and pushing
@@ -40,7 +49,6 @@ var scroll = async function (index) {
                     _index: hit._index,
                     _type: hit._type,
                     _id: hit._id,
-
                 }
             }, hit._source)
         })
@@ -54,6 +62,7 @@ var scroll = async function (index) {
             console.log(`todo time: ${moment.duration(todoSeconds, 'seconds').humanize()} ...`)
             console.log('')
 
+            /* todo: just for test
             var bulkResp = await clientDest.bulk({
                 body: body
             })
@@ -61,6 +70,8 @@ var scroll = async function (index) {
                 console.log('we got errors when bulk!')
                 process.exit()
             }
+            */
+            
             // console.log("sleep ...")
             child_process.execSync("sleep 1")
         }
@@ -114,13 +125,15 @@ var run = async function () {
     lines.forEach(function (data) {
         var tokens = data.split(/ +/)
         if (tokens[2]) {
-            console.log(tokens[2])
-            indices.push(tokens[2])
+            var index = tokens[2]
+            if (index.startsWith('pekall') || index.startsWith('dlp') || 
+                index.startsWith('nba') || index.startsWith('uni')) {
+                console.log(index)
+                indices.push(index)
+            }
         }
     })
-    console.log('indices')
-    console.log(indices)
-
+    
     await initMetrix(indices)
 
     for (let i = 0; i < indices.length; i++) {

@@ -1,0 +1,36 @@
+.monitoring-kibana-6-2021.07.20
+filebeat-2020.06.21
+filebeat-2020.06.18
+.monitoring-kibana-6-2021.07.17
+filebeat-2020.06.22
+kibana_sample_data_logs
+.monitoring-es-6-2021.07.20
+.monitoring-es-6-2021.07.18
+users
+kibana_sample_data_ecommerce
+.kibana_1
+.monitoring-kibana-6-2021.07.16
+.monitoring-es-6-2021.07.19
+.monitoring-es-6-2021.07.14
+.monitoring-kibana-6-2021.07.18
+filebeat-2020.06.20
+.monitoring-es-6-2021.07.16
+.monitoring-es-6-2021.07.15
+foo
+.monitoring-kibana-6-2021.07.15
+kibana_sample_data_flights
+.tasks
+filebeat-2020.06.19
+.security-6
+1pekall-depmon-log-1970-01-app_active_user_log
+.kibana_task_manager
+.monitoring-es-6-2021.07.17
+.monitoring-kibana-6-2021.07.14
+.monitoring-kibana-6-2021.07.19
+totalCount is: 13160416
+todo, count: 13160416, time:  4 hours
+index pekall-depmon-log-2020-01-app_download_log, bulk size: 4
+
+todo count: 13160412 ...
+todo time: 4 hours ...
+

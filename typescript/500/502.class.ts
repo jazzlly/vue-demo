@@ -1,5 +1,5 @@
 
-class CPerson {
+class Person {
     static count: number = 0
 
     name: string
@@ -8,7 +8,7 @@ class CPerson {
     constructor(name: string, age: number) {
         this.name = name
         this.age = age
-        CPerson.count++
+        Person.count++
     }
 
     dump():void {
@@ -16,11 +16,11 @@ class CPerson {
     }
 }
 
-var ryan1:CPerson = new CPerson('ryan', 32)
+var ryan1:Person = new Person('ryan', 32)
 // ryan1.dump()
 
 // 类继承, 可以多重继承， 不能继承多个类
-class CMusician extends CPerson {
+class CMusician extends Person {
     inst: string
 
     constructor(name: string, age: number, inst: string) {
@@ -52,4 +52,4 @@ class CAthleteMusician extends CMusician {
 
 var cam = new CAthleteMusician('ryan', 32, 'piano', 'badminton')
 cam.dump()
-console.info(CPerson.count)
+console.info(Person.count)
