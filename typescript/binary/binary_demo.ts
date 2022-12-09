@@ -12,4 +12,16 @@ namespace binaryDemo {
     }
 
     console.info(doubleToByteArray(3.1415926))
+
+    function stringToArrayBuffer(str:string) {
+        return new TextEncoder().encode(str);
+        /*
+        var uint8array = new TextEncoder("utf-8").encode("Plain Text");
+        var string = new TextDecoder().decode(uint8array);
+        console.log(uint8array ,string )
+        */
+    }
+
+    console.info(stringToArrayBuffer("你好哈哈哈hello!"))
 }
+

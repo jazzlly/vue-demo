@@ -9,4 +9,8 @@ var binaryDemo;
         return Array.from(new Int8Array(buffer)).reverse();
     }
     console.info(doubleToByteArray(3.1415926));
+    function stringToArrayBuffer(str) {
+        return new TextEncoder().encode(str);
+    }
+    console.info(stringToArrayBuffer("你好哈哈哈hello!"));
 })(binaryDemo || (binaryDemo = {}));
