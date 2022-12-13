@@ -1186,7 +1186,7 @@ function iterPolicyBean(o, indent) {
     console.info(' '.repeat(indent).concat('{'));
     console.info(' '.repeat(indent).concat(protCall(o)));
     for (let key in o) {
-        if (o.hasOwnProperty(key)) {
+        if (o.hasOwnProperty(key) && typeof (o[key] !== 'function')) {
             console.info(' '.repeat(indent).concat(key).concat(':'));
             iterPolicyBean(o[key], indent + 2);
         }

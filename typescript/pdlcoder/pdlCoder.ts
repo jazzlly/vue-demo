@@ -1,5 +1,15 @@
-import pb = require("./900.PolicyBean")
+import pb = require("./pdlBeans")
+import { ByteBuffer } from "./ByteBuffer"
+import { JSONObject, JSONValue, JSONArray } from "./JsonObject";
 
+function foo(o: JSONObject, key: string, value: JSONValue) {
+  o[key] = value;
+  return o;
+}
+
+/*
+对于ruleType需要写入Integer
+*/
 const jsonPolicyBean: string = `
     {
         "flowNumber": "044abcc4b0684c72a5fbe2325a429b18",
@@ -1192,9 +1202,9 @@ function iterPolicyBean(o: any, indent: number): void {
   console.info(' '.repeat(indent).concat('{'))
   console.info(' '.repeat(indent).concat(protCall(o)))
   for (let key in o) {
-    if (o.hasOwnProperty(key)) {
+    if (o.hasOwnProperty(key) && typeof (o[key] !== 'function')) {
       console.info(' '.repeat(indent).concat(key).concat(':'))
-      iterPolicyBean(o[key], indent+2)
+      iterPolicyBean(o[key], indent + 2)
     }
   }
   console.info(' '.repeat(indent).concat('}'))

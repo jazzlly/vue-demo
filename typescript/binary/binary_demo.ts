@@ -8,10 +8,25 @@ namespace binaryDemo {
         longNum[0] = num;
     
         // return Array.from(new Int8Array(buffer)).reverse();  // reverse to get little endian
-        return Array.from(new Int8Array(buffer)).reverse();
+        return Array.from(new Uint8Array(buffer)).reverse();
     }
 
+    function doubleToByteArray2(num: number) {
+        var buffer = new ArrayBuffer(16);         // JS numbers are 8 bytes long, or 64 bits
+
+        // var longNum = new Float64Array(buffer);  // so equivalent to Float64
+        // longNum[0] = num;
+
+        let dataview = new DataView(buffer, 0)
+        dataview.setFloat64(3, num)
+    
+        return Array.from(new Uint8Array(buffer))  // reverse to get little endian
+        // return Array.from(new Int8Array(buffer)).reverse();
+    }
+    
+
     console.info(doubleToByteArray(3.1415926))
+    console.info(doubleToByteArray2(3.1415926))
 
     function stringToArrayBuffer(str:string) {
         return new TextEncoder().encode(str);
@@ -22,6 +37,6 @@ namespace binaryDemo {
         */
     }
 
-    console.info(stringToArrayBuffer("你好哈哈哈hello!"))
+    // console.info(stringToArrayBuffer("你好哈哈哈hello!"))
 }
 
