@@ -1,5 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+function foo(o, key, value) {
+    o[key] = value;
+    return o;
+}
+/*
+对于ruleType需要写入Integer
+*/
 const jsonPolicyBean = `
     {
         "flowNumber": "044abcc4b0684c72a5fbe2325a429b18",

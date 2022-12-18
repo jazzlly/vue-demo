@@ -1,6 +1,7 @@
 "use strict";
 var ClassDemo;
 (function (ClassDemo) {
+    // https://zh.javascript.info/class
     class User {
         constructor(name, age) {
             this.name = name;
@@ -19,6 +20,6 @@ var ClassDemo;
     // console.info(Object.getPrototypeOf(peter));
     // console.info(peter.constructor.name);
     // console.info(peter instanceof User);
-    console.info(Object.getPrototypeOf(peter) === User.prototype);
-    console.info(Object.getPrototypeOf(peter) === User.prototype.constructor.prototype);
+    console.info(Object.getPrototypeOf(peter) === User.prototype); // true
+    console.info(Object.getPrototypeOf(peter) === User.prototype.constructor.prototype); // true
 })(ClassDemo || (ClassDemo = {}));
