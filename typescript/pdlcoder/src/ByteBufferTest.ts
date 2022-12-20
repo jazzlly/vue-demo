@@ -15,6 +15,10 @@ async function testWriteByte() {
     if (base64 !== buf.base64String()) {
         throw 'testWriteByte failed!'
     }
+
+    if (buf.readByte() !== param) {
+        throw 'read byte failed!'
+    }
 }
 
 async function testWriteShort() {
@@ -27,6 +31,10 @@ async function testWriteShort() {
     let base64 = await (await httpc.get(`${baseUrl}/base64String?uuid=${uuid}`)).readBody();
     if (base64 !== buf.base64String()) {
         throw 'testWriteShort failed!'
+    }
+
+    if (buf.readShort() !== param) {
+        throw 'read short failed!'
     }
 }
 
@@ -41,11 +49,15 @@ async function testWriteInt() {
     if (base64 !== buf.base64String()) {
         throw 'testWriteInt failed!'
     }
+
+    if (buf.readInt() !== param) {
+        throw 'read int failed!'
+    }
 }
 
 async function testWriteDouble() {
     const buf = new ByteBuffer()
-    const param: number = 3.1415926
+    const param: number = -3.1415926
     buf.writeDouble(param)
 
     let uuid = await (await httpc.get(baseUrl)).readBody();
@@ -54,12 +66,16 @@ async function testWriteDouble() {
     if (base64 !== buf.base64String()) {
         throw 'testWriteDouble failed!'
     }
+
+    if (buf.readDouble() !== param) {
+        throw 'read byte failed!'
+    }
 }
 
 async function testWriteBytes() {
     const buf = new ByteBuffer()
     const param: string = 'asb你好1234#@'
-    buf.writeString(param)
+    const byteLen = buf.writeString(param)
 
     let uuid = await (await httpc.get(baseUrl)).readBody();
     let len = await (await httpc.get(`${baseUrl}/writeString?uuid=${uuid}&param=${encodeURIComponent(param)}`)).readBody();
@@ -67,6 +83,10 @@ async function testWriteBytes() {
     
     if (base64 !== buf.base64String()) {
         throw 'testWriteBytes failed!'
+    }
+
+    if (buf.readString(byteLen) !== param) {
+        throw 'read string failed!'
     }
 }
 
@@ -76,7 +96,7 @@ async function testWriteData() {
     buf.writeShort(65535)
     buf.writeInt(22342)
     buf.writeDouble(3.1415926)
-    buf.writeString("asb你好1234#@")
+    const byteLen = buf.writeString("asb你好1234#@")
     
     let uuid = await (await httpc.get(baseUrl)).readBody();
     await (await httpc.get(`${baseUrl}/writeByte?uuid=${uuid}&param=255`)).readBody();
@@ -86,15 +106,31 @@ async function testWriteData() {
     await (await httpc.get(`${baseUrl}/writeString?uuid=${uuid}&param=${encodeURIComponent("asb你好1234#@")}`)).readBody();
     
     let base64 = await (await httpc.get(`${baseUrl}/base64String?uuid=${uuid}`)).readBody();
-    
-    // console.info(buf.base64String());
-    // console.info(base64);
 
     if (base64 !== buf.base64String()) {
         throw 'testWriteData failed!'
     }
-}
 
+    if (buf.readByte() !== 255) {
+        throw 'read string failed!'
+    }
+
+    if (buf.readShort() !== 65535) {
+        throw 'read string failed!'
+    }
+
+    if (buf.readInt() !== 22342) {
+        throw 'read string failed!'
+    }
+
+    if (buf.readDouble() !== 3.1415926) {
+        throw 'read string failed!'
+    }
+
+    if (buf.readString(byteLen) !== "asb你好1234#@") {
+        throw 'read string failed!'
+    }
+}
 
 testWriteByte()
 testWriteShort()

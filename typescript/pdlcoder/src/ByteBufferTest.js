@@ -34,9 +34,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const ByteBuffer_1 = require("../src/ByteBuffer");
 const httpm = __importStar(require("typed-rest-client/HttpClient"));
-// import * as rm from 'typed-rest-client/RestClient';
-// let rest: rm.RestClient = new rm.RestClient('pdl tester', 
-//     'http://localhost:8080/pdltest/buffer')
 let httpc = new httpm.HttpClient('pdl tester');
 const baseUrl = 'http://localhost:8080/pdltest/buffer';
 function testWriteByte() {
@@ -49,6 +46,9 @@ function testWriteByte() {
         let base64 = yield (yield httpc.get(`${baseUrl}/base64String?uuid=${uuid}`)).readBody();
         if (base64 !== buf.base64String()) {
             throw 'testWriteByte failed!';
+        }
+        if (buf.readByte() !== param) {
+            throw 'read byte failed!';
         }
     });
 }
@@ -63,6 +63,9 @@ function testWriteShort() {
         if (base64 !== buf.base64String()) {
             throw 'testWriteShort failed!';
         }
+        if (buf.readShort() !== param) {
+            throw 'read short failed!';
+        }
     });
 }
 function testWriteInt() {
@@ -76,12 +79,15 @@ function testWriteInt() {
         if (base64 !== buf.base64String()) {
             throw 'testWriteInt failed!';
         }
+        if (buf.readInt() !== param) {
+            throw 'read int failed!';
+        }
     });
 }
 function testWriteDouble() {
     return __awaiter(this, void 0, void 0, function* () {
         const buf = new ByteBuffer_1.ByteBuffer();
-        const param = 3.1415926;
+        const param = -3.1415926;
         buf.writeDouble(param);
         let uuid = yield (yield httpc.get(baseUrl)).readBody();
         let len = yield (yield httpc.get(`${baseUrl}/writeDouble?uuid=${uuid}&param=${param}`)).readBody();
@@ -89,18 +95,24 @@ function testWriteDouble() {
         if (base64 !== buf.base64String()) {
             throw 'testWriteDouble failed!';
         }
+        if (buf.readDouble() !== param) {
+            throw 'read byte failed!';
+        }
     });
 }
 function testWriteBytes() {
     return __awaiter(this, void 0, void 0, function* () {
         const buf = new ByteBuffer_1.ByteBuffer();
         const param = 'asb你好1234#@';
-        buf.writeString(param);
+        const byteLen = buf.writeString(param);
         let uuid = yield (yield httpc.get(baseUrl)).readBody();
         let len = yield (yield httpc.get(`${baseUrl}/writeString?uuid=${uuid}&param=${encodeURIComponent(param)}`)).readBody();
         let base64 = yield (yield httpc.get(`${baseUrl}/base64String?uuid=${uuid}`)).readBody();
         if (base64 !== buf.base64String()) {
             throw 'testWriteBytes failed!';
+        }
+        if (buf.readString(byteLen) !== param) {
+            throw 'read string failed!';
         }
     });
 }
@@ -111,7 +123,7 @@ function testWriteData() {
         buf.writeShort(65535);
         buf.writeInt(22342);
         buf.writeDouble(3.1415926);
-        buf.writeString("asb你好1234#@");
+        const byteLen = buf.writeString("asb你好1234#@");
         let uuid = yield (yield httpc.get(baseUrl)).readBody();
         yield (yield httpc.get(`${baseUrl}/writeByte?uuid=${uuid}&param=255`)).readBody();
         yield (yield httpc.get(`${baseUrl}/writeShort?uuid=${uuid}&param=65535`)).readBody();
@@ -119,10 +131,23 @@ function testWriteData() {
         yield (yield httpc.get(`${baseUrl}/writeDouble?uuid=${uuid}&param=3.1415926`)).readBody();
         yield (yield httpc.get(`${baseUrl}/writeString?uuid=${uuid}&param=${encodeURIComponent("asb你好1234#@")}`)).readBody();
         let base64 = yield (yield httpc.get(`${baseUrl}/base64String?uuid=${uuid}`)).readBody();
-        console.info(buf.base64String());
-        console.info(base64);
         if (base64 !== buf.base64String()) {
             throw 'testWriteData failed!';
+        }
+        if (buf.readByte() !== 255) {
+            throw 'read string failed!';
+        }
+        if (buf.readShort() !== 65535) {
+            throw 'read string failed!';
+        }
+        if (buf.readInt() !== 22342) {
+            throw 'read string failed!';
+        }
+        if (buf.readDouble() !== 3.1415926) {
+            throw 'read string failed!';
+        }
+        if (buf.readString(byteLen) !== "asb你好1234#@") {
+            throw 'read string failed!';
         }
     });
 }

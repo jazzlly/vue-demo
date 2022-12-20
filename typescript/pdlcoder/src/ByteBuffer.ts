@@ -10,11 +10,12 @@ class ByteBuffer {
     buffer: ArrayBuffer
     dataview: DataView
     encoder: TextEncoder
+    decoder: TextDecoder
 
     constructor(
         writerIndex: number = 0, 
         readerIndex: number = 0,
-        capability: number = 128,
+        capability: number = 1,
         writerMark: number = 0
         ) {
             this.writerIndex = writerIndex
@@ -24,6 +25,7 @@ class ByteBuffer {
             this.buffer = new ArrayBuffer(capability)
             this.dataview = new DataView(this.buffer)
             this.encoder =  new TextEncoder()
+            this.decoder = new TextDecoder()
     }
 
     writeByte(aByte: number) {
@@ -54,7 +56,7 @@ class ByteBuffer {
         this.writerIndex += 8
     }
 
-    writeBytes(bytes: Uint8Array) {
+    writeBytes(bytes: Uint8Array): number {
         this.tryExpand(bytes.byteLength)
 
         for (let index = 0; index < bytes.byteLength; index++) {
@@ -62,10 +64,12 @@ class ByteBuffer {
         }
 
         this.writerIndex += bytes.byteLength
+
+        return bytes.byteLength
     }
 
-    writeString(aStr: string) {
-        this.writeBytes(this.encoder.encode(aStr))
+    writeString(aStr: string) : number {
+       return this.writeBytes(this.encoder.encode(aStr))
     }
 
     base64String() : string {
@@ -77,47 +81,99 @@ class ByteBuffer {
     }
 
     readByte(): number {
-        throw 'todo'
+        if (!this.hasBytesToRead(1)) {
+            return NaN
+        }
+
+        let value = this.dataview.getUint8(this.readerIndex)
+        this.readerIndex++
+        return value
     }
 
     readShort(): number {
-        throw 'todo'
+        if (!this.hasBytesToRead(2)) {
+            return NaN
+        }
+
+        let value = this.dataview.getUint16(this.readerIndex)
+        this.readerIndex += 2
+        return value;
     }
 
     readInt(): number {
-        throw 'todo'
+        if (!this.hasBytesToRead(4)) {
+            return NaN
+        }
+
+        let value = this.dataview.getUint32(this.readerIndex)
+        this.readerIndex += 4
+        return value;
     }
 
-    readNumber() :number {
-        throw 'todo'
+    readDouble() :number {
+        if (!this.hasBytesToRead(8)) {
+            return NaN
+        }
+
+        let value = this.dataview.getFloat64(this.readerIndex)
+        this.readerIndex += 8
+        return value;
+    }
+
+    readBytes(byteLen: number) : Uint8Array {
+        if (!this.hasBytesToRead(byteLen)) {
+            throw 'illegal status'
+        }
+
+        let buf = new ArrayBuffer(byteLen)
+        let array = new Uint8Array(buf)
+        for (let index = 0; index < byteLen; index++) {
+            array[index] = this.dataview.getUint8(this.readerIndex + index)
+        }
+        return array
+    }
+
+    readString(byteLen: number) : string {
+        return this.decoder.decode(this.readBytes(byteLen));
     }
     
-    setInt(int: number, index: number) {
-        throw 'todo'
+    setShort(byteOffset: number, value: number) {
+        this.dataview.setUint16(byteOffset, value)
+    }
+
+    setInt(byteOffset: number, value: number) {
+        this.dataview.setUint32(byteOffset, value)
+    }
+
+    getDouble(byteOffset: number) :number {
+        return this.dataview.getFloat64(byteOffset)
     }
 
     readableBytes(): number {
-        throw 'todo'
+        return this.writerIndex - this.readerIndex
+    }
+
+    hasBytesToRead(byteLen: number): boolean {
+        return this.readableBytes() >= byteLen;
     }
 
     tryExpand(byteLen: number) {
-        // todo:
-        console.info("try expand, todo ...");
-        // var oldBuffer = new ArrayBuffer(20);
-        // var newBuffer = new ArrayBuffer(40);
-        // new Uint8Array(newBuffer).set(oldBuffer);
-    }
+        if (this.writerIndex + byteLen <= this.capability) {
+            return
+        }
 
-    resizeUint8(baseArrayBuffer: ArrayBuffer, newByteSize: number) {
-        var resizedArrayBuffer = new ArrayBuffer(newByteSize),
-            len = baseArrayBuffer.byteLength,
-            resizeLen = (len > newByteSize) ? newByteSize : len;
+        let newCap: number = this.capability * 2
+        while (this.writerIndex + byteLen > newCap) {
+            newCap *= 2
+        }
 
-        (new Uint8Array(resizedArrayBuffer, 0, resizeLen)).set(new Uint8Array(baseArrayBuffer, 0, resizeLen));
+        let newArray:ArrayBuffer = new ArrayBuffer(newCap);
 
-        return resizedArrayBuffer;
+        (new Uint8Array(newArray, 0, this.capability)).set(new Uint8Array(this.buffer));
+        this.buffer = newArray
+        this.dataview = new DataView(newArray)
+        this.capability = newCap
     }
 }
 
-//  let byteBuffer = new ByteBuffer()
 export { ByteBuffer }
