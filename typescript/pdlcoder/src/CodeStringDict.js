@@ -697,4 +697,13 @@ add(677, "mRuleDefinitionBean");
 add(678, "fenRef");
 add(679, "value");
 add(680, "ruleType");
+// 测试使用field
+add(3000, "aBoolean");
+add(3001, "aByte");
+add(3002, "aShort");
+add(3003, "anInt");
+add(3004, "aDouble");
+add(3005, "aString");
+add(3006, "anArray");
+add(3007, "aPojo");
 add(0x7fff, "");

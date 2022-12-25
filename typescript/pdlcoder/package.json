@@ -1,5 +1,9 @@
 {
   "devDependencies": {
+    "@types/lodash": "^4.14.191",
+    "@types/sm-crypto": "^0.3.0",
+    "lodash": "^4.17.21",
+    "sm-crypto": "^0.3.11",
     "typed-rest-client": "^1.8.9"
   }
 }

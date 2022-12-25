@@ -1,8 +1,13 @@
 /**
  * ByteBuffer like netty ByteBuf
  */
-class ByteBuffer {
+const zero_value: number = 0
+const max_byte_value: number = (1<<8) - 1
+const max_short_value: number = (1<<16) - 1
+const max_int_value: number = (1<<30)
 
+class ByteBuffer {
+    
     writerIndex: number
     readerIndex: number
     capability: number
@@ -29,6 +34,10 @@ class ByteBuffer {
     }
 
     writeByte(aByte: number) {
+        if (aByte < zero_value || aByte > max_byte_value) {
+            throw 'pdl buffer error: write byte, out of boundary!'
+        }
+
         this.tryExpand(1)
 
         this.dataview.setUint8(this.writerIndex, aByte)
@@ -36,6 +45,10 @@ class ByteBuffer {
     }
     
     writeShort(aShort: number) {
+        if (aShort < zero_value || aShort > max_short_value) {
+            throw 'pdl buffer error: write short, out of boundary!'
+        }
+
         this.tryExpand(2)
         
         this.dataview.setUint16(this.writerIndex, aShort)
@@ -43,6 +56,11 @@ class ByteBuffer {
     }
 
     writeInt(anInt: number) {
+        if (anInt < zero_value || anInt > max_int_value) {
+            console.info(`write int: ${anInt}, min: ${zero_value}, max: ${max_int_value}`);
+            throw 'pdl buffer error: write int, out of boundary!'
+        }
+
         this.tryExpand(4)
         
         this.dataview.setUint32(this.writerIndex, anInt)
@@ -82,7 +100,7 @@ class ByteBuffer {
 
     readByte(): number {
         if (!this.hasBytesToRead(1)) {
-            return NaN
+            throw 'pdl buffer error: read byte, no enough data to read!'
         }
 
         let value = this.dataview.getUint8(this.readerIndex)
@@ -92,7 +110,7 @@ class ByteBuffer {
 
     readShort(): number {
         if (!this.hasBytesToRead(2)) {
-            return NaN
+            throw 'pdl buffer error: read short, no enough data to read!'
         }
 
         let value = this.dataview.getUint16(this.readerIndex)
@@ -130,6 +148,8 @@ class ByteBuffer {
         for (let index = 0; index < byteLen; index++) {
             array[index] = this.dataview.getUint8(this.readerIndex + index)
         }
+
+        this.readerIndex += byteLen
         return array
     }
 
@@ -173,6 +193,16 @@ class ByteBuffer {
         this.buffer = newArray
         this.dataview = new DataView(newArray)
         this.capability = newCap
+    }
+
+    resetFromBase64String(base64: string) {        
+        this.buffer = Uint8Array.from(atob(base64), c => c.charCodeAt(0)).buffer
+        this.dataview = new DataView(this.buffer)
+
+        this.capability = this.buffer.byteLength
+        this.writerIndex = this.buffer.byteLength
+        this.readerIndex = 0
+        this.writerMark = 0
     }
 }
 
